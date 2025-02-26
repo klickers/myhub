@@ -4,10 +4,27 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+    @apply duration-300;
+}
+
 body {
     @apply font-default;
 }
 
 h1 {
     @apply text-5xl font-semibold mb-8;
+}
+
+#sidenav {
+    a {
+        @apply block rounded-full p-3;
+        &:hover,
+        &.active-link {
+            @apply bg-neutral-200;
+        }
+        svg {
+            @apply w-6 h-6 mx-auto;
+        }
+    }
 }

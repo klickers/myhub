@@ -19,6 +19,7 @@
     "web": "file:"
   },
   "devDependencies": {
+    "@iconify/react": "^5.2.0",
     "@redwoodjs/vite": "8.5.0",
     "@tailwindcss/vite": "^4.0.9",
     "@types/react": "^18.2.55",
