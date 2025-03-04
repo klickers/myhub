@@ -18,10 +18,10 @@ h1 {
 
 #sidenav {
     a {
-        @apply block rounded-full p-3;
+        @apply block p-3 w-full;
         &:hover,
         &.active-link {
-            @apply bg-neutral-200;
+            @apply bg-black text-white;
         }
         svg {
             @apply w-6 h-6 mx-auto;

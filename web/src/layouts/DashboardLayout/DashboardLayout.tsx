@@ -1,30 +1,28 @@
-import {Icon} from "@iconify/react"
-
-import {NavLink, routes} from "@redwoodjs/router"
+import { NavLink, routes } from "@redwoodjs/router"
 
 type DashboardLayoutProps = {
     children?: React.ReactNode
 }
 
-const DashboardLayout = ({children}: DashboardLayoutProps) => {
+const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     return (
         <div>
             <aside
                 id="sidenav"
-                className="w-16 h-screen fixed p-2 border-r border-neutral-200"
+                className="h-screen fixed py-2 border-r border-black"
             >
                 <NavLink to={routes.dashboard()} activeClassName="active-link">
-                    <Icon icon="gravity-ui:house" />
+                    Home
                 </NavLink>
                 <div className="mt-10">
                     <NavLink to="#!" activeClassName="active-link">
-                        <Icon icon="gravity-ui:calendar" />
+                        Calendar
                     </NavLink>
                     <NavLink to="#!" activeClassName="active-link">
-                        <Icon icon="gravity-ui:square-list-ul" />
+                        Tasks
                     </NavLink>
                     <NavLink to="#!" activeClassName="active-link">
-                        <Icon icon="gravity-ui:book" />
+                        Journal
                     </NavLink>
                 </div>
                 <NavLink
@@ -32,10 +30,10 @@ const DashboardLayout = ({children}: DashboardLayoutProps) => {
                     className="absolute bottom-2"
                     activeClassName="active-link"
                 >
-                    <Icon icon="gravity-ui:gear" />
+                    Settings
                 </NavLink>
             </aside>
-            <main className="ml-16 py-6 px-8">{children}</main>
+            <main className="ml-28 py-8 px-8">{children}</main>
         </div>
     )
 }
