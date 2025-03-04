@@ -8,7 +8,7 @@ const LandingPage = () => {
                 description="Welcome to your personal hub."
             />
             <div className="text-center pt-6 pb-12 min-h-screen flex flex-col justify-center items-center">
-                <h1>Welcome to your personal hub.</h1>
+                <h1>Welcome to your mission hub.</h1>
                 <p className="max-w-lg">
                     Become your best self. An all-in-one, interconnected
                     creativity and productivity workspace.
