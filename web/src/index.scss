@@ -16,6 +16,30 @@ h1 {
     @apply text-5xl font-semibold mb-8;
 }
 
+a {
+    @apply underline;
+
+    &:hover {
+        @apply no-underline;
+    }
+}
+
+form {
+    @apply flex flex-col gap-3;
+
+    input {
+        @apply border border-black w-full py-3 px-4 outline-none;
+    }
+}
+
+button {
+    @apply py-3 px-4 w-auto bg-black text-white border border-black;
+
+    &:hover {
+        @apply text-black bg-white;
+    }
+}
+
 #sidenav {
     a {
         @apply block p-3 w-full;
