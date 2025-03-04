@@ -12,17 +12,17 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 className="h-screen fixed py-2 border-r border-black"
             >
                 <NavLink to={routes.dashboard()} activeClassName="active-link">
-                    Home
+                    HQ
                 </NavLink>
                 <div className="mt-10">
                     <NavLink to="#!" activeClassName="active-link">
-                        Calendar
+                        Schedule
                     </NavLink>
                     <NavLink to="#!" activeClassName="active-link">
-                        Tasks
+                        Operations
                     </NavLink>
                     <NavLink to="#!" activeClassName="active-link">
-                        Journal
+                        Logbook
                     </NavLink>
                 </div>
                 <NavLink
@@ -33,7 +33,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                     Settings
                 </NavLink>
             </aside>
-            <main className="ml-28 py-8 px-8">{children}</main>
+            <main className="ml-32 py-8 px-8">{children}</main>
         </div>
     )
 }
