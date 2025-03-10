@@ -13,26 +13,26 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 id="sidenav"
                 className="w-16 h-screen fixed p-2 border-r border-neutral-200"
             >
-                <div>
-                    <NavLink
-                        to={routes.dashboard()}
-                        activeClassName="active-link"
-                    >
-                        <Icon icon="mingcute:home-3-line" />
+                <NavLink to={routes.dashboard()} activeClassName="active-link">
+                    <Icon icon="gravity-ui:house" />
+                </NavLink>
+                <div className="mt-10">
+                    <NavLink to="#!" activeClassName="active-link">
+                        <Icon icon="gravity-ui:calendar" />
                     </NavLink>
                     <NavLink to="#!" activeClassName="active-link">
-                        <Icon icon="mingcute:calendar-2-line" />
-                    </NavLink>
-                    <NavLink to="#!" activeClassName="active-link">
-                        <Icon icon="mingcute:book-2-line" />
+                        <Icon icon="gravity-ui:square-list-ul" />
                     </NavLink>
                 </div>
                 <div className="mt-10">
                     <NavLink to="#!" activeClassName="active-link">
-                        <Icon icon="mingcute:school-line" />
+                        <Icon icon="gravity-ui:book" />
                     </NavLink>
                     <NavLink to="#!" activeClassName="active-link">
-                        <Icon icon="mingcute:magic-3-line" />
+                        <Icon icon="gravity-ui:bulb" />
+                    </NavLink>
+                    <NavLink to="#!" activeClassName="active-link">
+                        <Icon icon="gravity-ui:heart" />
                     </NavLink>
                 </div>
                 <NavLink
@@ -40,7 +40,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                     className="absolute bottom-2"
                     activeClassName="active-link"
                 >
-                    <Icon icon="mingcute:settings-5-line" />
+                    <Icon icon="gravity-ui:gear" />
                 </NavLink>
             </aside>
             <main className="ml-16 py-6 px-8">{children}</main>
