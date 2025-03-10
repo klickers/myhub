@@ -1,6 +1,6 @@
-import { Icon } from "@iconify/react"
+import { routes } from "@redwoodjs/router"
 
-import { NavLink, routes } from "@redwoodjs/router"
+import SidebarButton from "src/components/SidebarButton/SidebarButton"
 
 type DashboardLayoutProps = {
     children?: React.ReactNode
@@ -13,35 +13,47 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 id="sidenav"
                 className="w-16 h-screen fixed p-2 border-r border-neutral-200"
             >
-                <NavLink to={routes.dashboard()} activeClassName="active-link">
-                    <Icon icon="gravity-ui:house" />
-                </NavLink>
+                <SidebarButton
+                    to={routes.dashboard()}
+                    icon="gravity-ui:house"
+                    label="Home"
+                />
                 <div className="mt-10">
-                    <NavLink to="#!" activeClassName="active-link">
-                        <Icon icon="gravity-ui:calendar" />
-                    </NavLink>
-                    <NavLink to="#!" activeClassName="active-link">
-                        <Icon icon="gravity-ui:square-list-ul" />
-                    </NavLink>
+                    <SidebarButton
+                        to="#!"
+                        icon="gravity-ui:calendar"
+                        label="Calendar"
+                    />
+                    <SidebarButton
+                        to="#!"
+                        icon="gravity-ui:square-list-ul"
+                        label="Workspace"
+                    />
                 </div>
                 <div className="mt-10">
-                    <NavLink to="#!" activeClassName="active-link">
-                        <Icon icon="gravity-ui:book" />
-                    </NavLink>
-                    <NavLink to="#!" activeClassName="active-link">
-                        <Icon icon="gravity-ui:bulb" />
-                    </NavLink>
-                    <NavLink to="#!" activeClassName="active-link">
-                        <Icon icon="gravity-ui:heart" />
-                    </NavLink>
+                    <SidebarButton
+                        to="#!"
+                        icon="gravity-ui:book"
+                        label="Journal"
+                    />
+                    <SidebarButton
+                        to="#!"
+                        icon="gravity-ui:bulb"
+                        label="Creativity Lab"
+                    />
+                    <SidebarButton
+                        to="#!"
+                        icon="gravity-ui:heart"
+                        label="Relaxation"
+                    />
                 </div>
-                <NavLink
-                    to="#!"
-                    className="absolute bottom-2"
-                    activeClassName="active-link"
-                >
-                    <Icon icon="gravity-ui:gear" />
-                </NavLink>
+                <div className="absolute bottom-2">
+                    <SidebarButton
+                        to="#!"
+                        icon="gravity-ui:gear"
+                        label="Settings"
+                    />
+                </div>
             </aside>
             <main className="ml-16 py-6 px-8">{children}</main>
         </div>

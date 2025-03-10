@@ -50,8 +50,42 @@ button {
         &.active-link {
             @apply bg-neutral-200;
         }
+        &:hover {
+            + .tooltip {
+                @apply z-0 opacity-100;
+            }
+        }
         svg {
             @apply w-6 h-6 mx-auto;
+        }
+    }
+    .tooltip {
+        @apply -z-10 opacity-0 bg-black text-white text-nowrap text-xs font-semibold lowercase rounded-3xl py-1 px-3;
+
+        .arrow,
+        .arrow::before {
+            @apply absolute w-2 h-2 bg-inherit;
+        }
+        .arrow {
+            visibility: hidden;
+        }
+        .arrow::before {
+            @apply visible;
+            content: "";
+            transform: rotate(45deg);
+        }
+
+        &[data-popper-placement^="top"] > .arrow {
+            @apply -bottom-1;
+        }
+        &[data-popper-placement^="bottom"] > .arrow {
+            @apply -top-1;
+        }
+        &[data-popper-placement^="left"] > .arrow {
+            right: -3px;
+        }
+        &[data-popper-placement^="right"] > .arrow {
+            left: -3px;
         }
     }
 }
