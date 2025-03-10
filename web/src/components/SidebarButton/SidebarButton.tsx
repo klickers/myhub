@@ -36,6 +36,7 @@ const SidebarButton = (props: Props) => {
                 ref={setReferenceElement}
             >
                 <Icon icon={props.icon} />
+                <div className="w-6 h-6 mx-auto"></div>
             </NavLink>
 
             <div

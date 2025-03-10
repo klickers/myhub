@@ -45,7 +45,7 @@ button {
 
 #sidenav {
     a {
-        @apply block rounded-full p-3;
+        @apply block rounded-full p-3 relative;
         &:hover,
         &.active-link {
             @apply bg-neutral-200;
@@ -56,7 +56,7 @@ button {
             }
         }
         svg {
-            @apply w-6 h-6 mx-auto;
+            @apply w-6 h-6 mx-auto absolute;
         }
     }
     .tooltip {
