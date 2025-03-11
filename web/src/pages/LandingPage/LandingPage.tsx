@@ -1,6 +1,12 @@
+import { Icon } from "@iconify/react/dist/iconify.js"
+
 import { Metadata } from "@redwoodjs/web"
 
+import { useAuth } from "src/auth"
+
 const LandingPage = () => {
+    const { signUp } = useAuth()
+
     return (
         <>
             <Metadata
@@ -13,6 +19,9 @@ const LandingPage = () => {
                     Become your best self. An all-in-one, interconnected
                     creativity and productivity workspace.
                 </p>
+                <button onClick={() => signUp()} className="mt-3">
+                    Get Started <Icon icon="gravity-ui:arrow-right" />
+                </button>
             </div>
         </>
     )

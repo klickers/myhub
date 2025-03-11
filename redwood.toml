@@ -6,10 +6,10 @@
 # https://redwoodjs.com/docs/app-configuration-redwood-toml
 
 [web]
-  title = "Redwood App"
+  title = "MyHub"
   port = 8910
   apiUrl = "/.redwood/functions" # You can customize graphql and dbauth urls individually too: see https://redwoodjs.com/docs/app-configuration-redwood-toml#api-paths
-  includeEnvironmentVariables = ["SUPABASE_URL", "SUPABASE_KEY"]
+  includeEnvironmentVariables = ["CLERK_PUBLISHABLE_KEY"]
 [api]
   port = 8911
 [browser]

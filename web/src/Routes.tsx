@@ -15,9 +15,7 @@ import DashboardLayout from "./layouts/DashboardLayout/DashboardLayout"
 const Routes = () => {
     return (
         <Router useAuth={useAuth}>
-            <Route path="/login" page={LoginPage} name="login" />
-            <Route path="/register" page={RegisterPage} name="register" />
-            <PrivateSet unauthenticated="login">
+            <PrivateSet unauthenticated="landing">
                 <Set wrap={DashboardLayout}>
                     <Route path="/dashboard" page={DashboardIndexPage} name="dashboard" />
                 </Set>
