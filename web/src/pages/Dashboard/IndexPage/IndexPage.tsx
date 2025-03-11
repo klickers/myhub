@@ -1,5 +1,4 @@
-// import { Link, routes } from '@redwoodjs/router'
-import {Metadata} from "@redwoodjs/web"
+import { Metadata } from "@redwoodjs/web"
 
 const IndexPage = () => {
     return (
