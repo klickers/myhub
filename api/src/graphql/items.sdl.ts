@@ -25,6 +25,7 @@ export const schema = gql`
 
     type Query {
         items: [Item!]! @requireAuth
+        folders: [Item!]! @requireAuth
         item(id: String!): Item @requireAuth
     }
 
@@ -38,7 +39,7 @@ export const schema = gql`
         dueDate: DateTime
         parentId: String
         statusId: Int
-        userId: String!
+        userId: String
     }
 
     input UpdateItemInput {

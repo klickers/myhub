@@ -13,7 +13,11 @@ body {
 }
 
 h1 {
-    @apply text-5xl font-semibold mb-8;
+    @apply text-5xl font-semibold mb-10;
+}
+
+h2 {
+    @apply text-4xl font-semibold mb-8;
 }
 
 p {
@@ -36,6 +40,37 @@ form {
         &:focus {
             @apply border-black;
         }
+        &::placeholder {
+            @apply text-gray-400; // !important;
+        }
+    }
+
+    .select {
+        [class*="control"] {
+            @apply rounded-full border border-gray-300 py-1 px-2 outline-none shadow-none;
+            &.focused {
+                @apply border-black;
+            }
+        }
+        [class*="menu"],
+        .menu-list {
+            @apply rounded-3xl py-0;
+        }
+        [class*="option"] {
+            @apply px-5;
+            &:hover {
+                @apply bg-gray-200;
+            }
+            &:first-child {
+                @apply rounded-t-3xl;
+            }
+            &:last-child {
+                @apply rounded-b-3xl;
+            }
+            &[aria-selected="true"] {
+                @apply bg-black;
+            }
+        }
     }
 }
 
@@ -49,6 +84,22 @@ button {
     svg {
         @apply w-5 h-5;
     }
+}
+
+.folders {
+    li {
+        a {
+            @apply block no-underline py-1 px-4 rounded-full font-medium;
+
+            &:hover {
+                @apply bg-gray-200;
+            }
+        }
+    }
+}
+
+.ReactModal__Content {
+    @apply rounded-3xl border-0 p-8 !important;
 }
 
 #sidenav {

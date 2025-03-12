@@ -1,6 +1,9 @@
 import { Metadata } from "@redwoodjs/web"
 
+import { useAuth } from "src/auth"
+
 const IndexPage = () => {
+    const { currentUser } = useAuth()
     return (
         <>
             <Metadata
@@ -8,7 +11,7 @@ const IndexPage = () => {
                 description="Your creativity and productivity dashboard."
             />
 
-            <h1>Welcome!</h1>
+            <h1>Welcome, {currentUser.firstName}!</h1>
         </>
     )
 }

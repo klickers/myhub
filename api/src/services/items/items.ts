@@ -3,11 +3,24 @@ import type {
     MutationResolvers,
     ItemRelationResolvers,
 } from "types/graphql"
+import { ItemType } from "types/graphql"
 
 import { db } from "src/lib/db"
 
 export const items: QueryResolvers["items"] = () => {
-    return db.item.findMany()
+    return db.item.findMany({ where: { userId: context.currentUser.id } })
+}
+
+export const folders: QueryResolvers["items"] = () => {
+    return db.item.findMany({
+        where: {
+            type: "FOLDER" as ItemType,
+            userId: context.currentUser.id,
+        },
+        orderBy: {
+            name: "asc",
+        },
+    })
 }
 
 export const item: QueryResolvers["item"] = ({ id }) => {
@@ -18,7 +31,7 @@ export const item: QueryResolvers["item"] = ({ id }) => {
 
 export const createItem: MutationResolvers["createItem"] = ({ input }) => {
     return db.item.create({
-        data: input,
+        data: { ...input, userId: context.currentUser.id },
     })
 }
 

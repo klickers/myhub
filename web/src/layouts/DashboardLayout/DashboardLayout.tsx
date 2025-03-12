@@ -1,4 +1,5 @@
 import { routes } from "@redwoodjs/router"
+import { Toaster } from "@redwoodjs/web/toast"
 
 import SidebarButton from "src/components/SidebarButton/SidebarButton"
 
@@ -9,6 +10,7 @@ type DashboardLayoutProps = {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     return (
         <div>
+            <Toaster />
             <aside
                 id="sidenav"
                 className="w-16 h-screen fixed p-2 border-r border-neutral-200"
@@ -25,7 +27,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                         label="Calendar"
                     />
                     <SidebarButton
-                        to="#!"
+                        to={routes.workspace()}
                         icon="gravity-ui:square-list-ul"
                         label="Workspace"
                     />
