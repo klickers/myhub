@@ -10,5 +10,8 @@
     "vs-code-prettier-eslint.prettierLast": false, // set as "true" to run 'prettier' last not first
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"
+    },
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
     }
 }
