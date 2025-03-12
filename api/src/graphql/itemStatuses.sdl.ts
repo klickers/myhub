@@ -2,6 +2,8 @@ export const schema = gql`
     type ItemStatus {
         id: Int!
         status: String!
+        userId: String!
+        user: User!
         items: [Item]!
     }
 
@@ -12,10 +14,12 @@ export const schema = gql`
 
     input CreateItemStatusInput {
         status: String!
+        userId: String!
     }
 
     input UpdateItemStatusInput {
         status: String
+        userId: String
     }
 
     type Mutation {

@@ -43,6 +43,9 @@ export const deleteItemStatus: MutationResolvers["deleteItemStatus"] = ({
 }
 
 export const ItemStatus: ItemStatusRelationResolvers = {
+    user: (_obj, { root }) => {
+        return db.itemStatus.findUnique({ where: { id: root?.id } }).user()
+    },
     items: (_obj, { root }) => {
         return db.itemStatus.findUnique({ where: { id: root?.id } }).items()
     },

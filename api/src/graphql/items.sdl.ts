@@ -9,11 +9,11 @@ export const schema = gql`
         startDate: DateTime
         dueDate: DateTime
         parentId: String
-        statusId: Int!
+        statusId: Int
         userId: String!
         parent: Item
         children: [Item]!
-        status: ItemStatus!
+        status: ItemStatus
         user: User!
     }
 
@@ -37,7 +37,7 @@ export const schema = gql`
         startDate: DateTime
         dueDate: DateTime
         parentId: String
-        statusId: Int!
+        statusId: Int
         userId: String!
     }
 

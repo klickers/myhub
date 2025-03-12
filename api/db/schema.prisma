@@ -13,7 +13,8 @@ model User {
     clerkId String @id
     email   String @unique
 
-    items Item[]
+    items        Item[]
+    itemStatuses ItemStatus[]
 }
 
 enum ItemType {
@@ -32,20 +33,25 @@ model Item {
     startDate   DateTime?
     dueDate     DateTime?
     parentId    String?
-    statusId    Int
+    statusId    Int?
     userId      String
 
-    parent   Item?      @relation("ParentChild", fields: [parentId], references: [id])
-    children Item[]     @relation("ParentChild")
-    status   ItemStatus @relation(fields: [statusId], references: [id])
-    user     User       @relation(fields: [userId], references: [clerkId])
+    parent   Item?       @relation("ParentChild", fields: [parentId], references: [id])
+    children Item[]      @relation("ParentChild")
+    status   ItemStatus? @relation(fields: [statusId], references: [id])
+    user     User        @relation(fields: [userId], references: [clerkId])
 
     @@unique([userId, slug])
 }
 
 model ItemStatus {
     id     Int    @id @default(autoincrement())
-    status String @unique
+    status String
+    userId String
+
+    user User @relation(fields: [userId], references: [clerkId])
 
     items Item[]
+
+    @@unique([userId, status])
 }

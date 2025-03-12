@@ -24,11 +24,11 @@ describe("users", () => {
 
     scenario("creates a user", async () => {
         const result = await createUser({
-            input: { clerkId: "String", email: "String8299368" },
+            input: { clerkId: "String", email: "String6535946" },
         })
 
         expect(result.clerkId).toEqual("String")
-        expect(result.email).toEqual("String8299368")
+        expect(result.email).toEqual("String6535946")
     })
 
     scenario("updates a user", async (scenario: StandardScenario) => {

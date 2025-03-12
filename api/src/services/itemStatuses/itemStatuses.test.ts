@@ -31,12 +31,13 @@ describe("itemStatuses", () => {
         }
     )
 
-    scenario("creates a itemStatus", async () => {
+    scenario("creates a itemStatus", async (scenario: StandardScenario) => {
         const result = await createItemStatus({
-            input: { status: "String9806333" },
+            input: { status: "String", userId: scenario.itemStatus.two.userId },
         })
 
-        expect(result.status).toEqual("String9806333")
+        expect(result.status).toEqual("String")
+        expect(result.userId).toEqual(scenario.itemStatus.two.userId)
     })
 
     scenario("updates a itemStatus", async (scenario: StandardScenario) => {
@@ -45,10 +46,10 @@ describe("itemStatuses", () => {
         })) as ItemStatus
         const result = await updateItemStatus({
             id: original.id,
-            input: { status: "String23544422" },
+            input: { status: "String2" },
         })
 
-        expect(result.status).toEqual("String23544422")
+        expect(result.status).toEqual("String2")
     })
 
     scenario("deletes a itemStatus", async (scenario: StandardScenario) => {

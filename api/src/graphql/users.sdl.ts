@@ -3,6 +3,7 @@ export const schema = gql`
         clerkId: String!
         email: String!
         items: [Item]!
+        itemStatuses: [ItemStatus]!
     }
 
     type Query {
