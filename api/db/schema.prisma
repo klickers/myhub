@@ -1,10 +1,49 @@
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
 }
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = "native"
+    provider      = "prisma-client-js"
+    binaryTargets = "native"
+}
+
+model User {
+    id      String @id @default(uuid())
+    clerkId String @unique
+    email   String @unique
+
+    items Item[]
+}
+
+enum ItemType {
+    FOLDER
+    PROJECT
+    TASK
+}
+
+model Item {
+    id          String   @id @default(uuid())
+    type        ItemType
+    name        String
+    slug        String
+    description String
+    notes       String   @db.Text
+    parentId    String
+    statusId    Int
+    userId      String
+
+    parent   Item       @relation("ParentChild", fields: [parentId], references: [id])
+    children Item[]     @relation("ParentChild")
+    status   ItemStatus @relation(fields: [statusId], references: [id])
+    user     User       @relation(fields: [userId], references: [id])
+
+    @@unique([userId, slug])
+}
+
+model ItemStatus {
+    id     Int    @id @default(autoincrement())
+    status String @unique
+    items  Item[]
 }
