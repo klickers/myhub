@@ -10,8 +10,7 @@ generator client {
 }
 
 model User {
-    id      String @id @default(uuid())
-    clerkId String @unique
+    clerkId String @id
     email   String @unique
 
     items Item[]
@@ -39,7 +38,7 @@ model Item {
     parent   Item?      @relation("ParentChild", fields: [parentId], references: [id])
     children Item[]     @relation("ParentChild")
     status   ItemStatus @relation(fields: [statusId], references: [id])
-    user     User       @relation(fields: [userId], references: [id])
+    user     User       @relation(fields: [userId], references: [clerkId])
 
     @@unique([userId, slug])
 }

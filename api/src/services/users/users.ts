@@ -10,9 +10,9 @@ export const users: QueryResolvers["users"] = () => {
     return db.user.findMany()
 }
 
-export const user: QueryResolvers["user"] = ({ id }) => {
+export const user: QueryResolvers["user"] = ({ clerkId }) => {
     return db.user.findUnique({
-        where: { id },
+        where: { clerkId },
     })
 }
 
@@ -22,21 +22,24 @@ export const createUser: MutationResolvers["createUser"] = ({ input }) => {
     })
 }
 
-export const updateUser: MutationResolvers["updateUser"] = ({ id, input }) => {
+export const updateUser: MutationResolvers["updateUser"] = ({
+    clerkId,
+    input,
+}) => {
     return db.user.update({
         data: input,
-        where: { id },
+        where: { clerkId },
     })
 }
 
-export const deleteUser: MutationResolvers["deleteUser"] = ({ id }) => {
+export const deleteUser: MutationResolvers["deleteUser"] = ({ clerkId }) => {
     return db.user.delete({
-        where: { id },
+        where: { clerkId },
     })
 }
 
 export const User: UserRelationResolvers = {
     items: (_obj, { root }) => {
-        return db.user.findUnique({ where: { id: root?.id } }).items()
+        return db.user.findUnique({ where: { clerkId: root?.clerkId } }).items()
     },
 }
