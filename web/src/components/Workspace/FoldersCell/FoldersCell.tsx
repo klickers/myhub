@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react"
 
-import type { FoldersQuery, FoldersQueryVariables, Item } from "types/graphql"
+import type {
+    FoldersQuery,
+    FoldersQueryVariables,
+    Item,
+    ItemType,
+} from "types/graphql"
 
 import { NavLink, routes } from "@redwoodjs/router"
 import type {
@@ -25,6 +30,7 @@ export const QUERY: TypedDocumentNode<FoldersQuery, FoldersQueryVariables> =
                     id
                     name
                     slug
+                    type
                 }
             }
         }
@@ -51,9 +57,10 @@ export const Success = ({
                 depth,
             })
             if (folder.children != null)
-                folder.children.forEach((child) =>
-                    folderRecur(child, depth + 1)
-                )
+                folder.children.forEach((child) => {
+                    if (child.type == ("FOLDER" as ItemType))
+                        folderRecur(child, depth + 1)
+                })
         }
         folders
             .filter((folder: Item) => folder.parent == null)
