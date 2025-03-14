@@ -11,6 +11,12 @@ export const items: QueryResolvers["items"] = () => {
     return db.item.findMany({ where: { userId: context.currentUser.id } })
 }
 
+export const item: QueryResolvers["item"] = ({ id }) => {
+    return db.item.findUnique({
+        where: { id, userId: context.currentUser.id },
+    })
+}
+
 export const folders: QueryResolvers["folders"] = () => {
     return db.item.findMany({
         where: {
@@ -20,12 +26,6 @@ export const folders: QueryResolvers["folders"] = () => {
         orderBy: {
             name: "asc",
         },
-    })
-}
-
-export const item: QueryResolvers["item"] = ({ id }) => {
-    return db.item.findUnique({
-        where: { id, userId: context.currentUser.id },
     })
 }
 
