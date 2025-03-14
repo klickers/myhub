@@ -36,9 +36,17 @@ export const QUERY: TypedDocumentNode<FoldersQuery, FoldersQueryVariables> =
         }
     `
 
-export const Loading = () => <div>Loading folders...</div>
+export const Loading = () => (
+    <div className="mb-6 rounded-3xl bg-gray-100 py-6 px-3">
+        <p>Loading folders...</p>
+    </div>
+)
 
-export const Empty = () => <div>Create a folder!</div>
+export const Empty = () => (
+    <div className="mb-6 rounded-3xl bg-gray-100 py-6 px-3">
+        <p>Create a folder!</p>
+    </div>
+)
 
 export const Failure = ({ error }: CellFailureProps<FoldersQueryVariables>) => (
     <div style={{ color: "red" }}>Error: {error?.message}</div>
