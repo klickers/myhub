@@ -131,13 +131,12 @@ button,
         @apply pointer-events-none overflow-visible overflow-y-scroll h-screen left-0 right-0 top-0 fixed bg-transparent border-none !important;
 
         & > div {
-            @apply pointer-events-auto relative bg-white mt-12 mb-10 rounded-3xl border-0 p-8 max-w-screen-md;
-            top: 50%;
+            @apply pointer-events-auto relative top-0 bg-white my-10 rounded-3xl border-0 p-8 max-w-screen-md;
             left: 50%;
             right: auto;
             bottom: auto;
             margin-right: -50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, 0);
         }
     }
 }
