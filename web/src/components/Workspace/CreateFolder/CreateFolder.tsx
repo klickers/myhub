@@ -107,6 +107,9 @@ const CreateFolder = ({ query, folders }: Props) => {
                         <TextField
                             name="slug"
                             value={newFolderSlug}
+                            onChange={(e) =>
+                                setNewFolderSlug(slugify(e.target.value))
+                            }
                             validation={{ required: true }}
                         />
                     </div>
