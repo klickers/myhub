@@ -57,6 +57,9 @@ const CreateProject = ({ parentId, query }: Props) => {
         onCompleted: () => {
             toast.success("Project created!")
             formMethods.reset()
+            setStartDate(null)
+            setDueDate(null)
+            setNewProjectSlug("")
         },
         refetchQueries: [query],
         awaitRefetchQueries: true,
