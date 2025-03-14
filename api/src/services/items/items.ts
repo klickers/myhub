@@ -59,6 +59,12 @@ export const projects: QueryResolvers["projects"] = ({ parentSlug }) => {
                     nulls: "last",
                 },
             },
+            {
+                startDate: {
+                    sort: "asc",
+                    nulls: "last",
+                },
+            },
             { name: "asc" },
         ],
         include: {
