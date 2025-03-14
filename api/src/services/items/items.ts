@@ -7,17 +7,15 @@ import { ItemType } from "types/graphql"
 
 import { db } from "src/lib/db"
 
-const userId = context.currentUser.id
-
 export const items: QueryResolvers["items"] = () => {
-    return db.item.findMany({ where: { userId } })
+    return db.item.findMany({ where: { userId: context.currentUser.id } })
 }
 
 export const folders: QueryResolvers["folders"] = () => {
     return db.item.findMany({
         where: {
             type: "FOLDER" as ItemType,
-            userId,
+            userId: context.currentUser.id,
         },
         orderBy: {
             name: "asc",
@@ -27,7 +25,7 @@ export const folders: QueryResolvers["folders"] = () => {
 
 export const item: QueryResolvers["item"] = ({ id }) => {
     return db.item.findUnique({
-        where: { id, userId },
+        where: { id, userId: context.currentUser.id },
     })
 }
 
@@ -36,7 +34,7 @@ export const folder: QueryResolvers["folder"] = ({ slug }) => {
         where: {
             slug,
             type: "FOLDER" as ItemType,
-            userId,
+            userId: context.currentUser.id,
         },
     })
 }
