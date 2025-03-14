@@ -52,11 +52,27 @@ export const projects: QueryResolvers["projects"] = ({ parentSlug }) => {
                 slug: parentSlug,
             },
         },
-        orderBy: {
-            dueDate: "asc",
-        },
+        orderBy: [
+            {
+                dueDate: {
+                    sort: "asc",
+                    nulls: "last",
+                },
+            },
+            { name: "asc" },
+        ],
         include: {
             parent: true,
+        },
+    })
+}
+
+export const project: QueryResolvers["project"] = ({ slug }) => {
+    return db.item.findFirst({
+        where: {
+            slug,
+            type: "PROJECT" as ItemType,
+            userId: context.currentUser.id,
         },
     })
 }

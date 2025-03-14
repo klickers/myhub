@@ -22,6 +22,7 @@ const Routes = () => {
                     <Set wrap={WorkspaceLayout} title="Workspace">
                         <Route path="/dashboard/workspace" page={DashboardWorkspaceIndexPage} name="workspace" />
                         <Route path="/dashboard/workspace/folder/{slug}" page={DashboardWorkspaceFolderPage} name="workspaceFolder" />
+                        <Route path="/dashboard/workspace/project/{slug}" page={DashboardWorkspaceProjectPage} name="workspaceProject" />
                     </Set>
                 </Set>
             </PrivateSet>

@@ -1,7 +1,7 @@
 import { format } from "date-fns"
 import type { ProjectsQuery, ProjectsQueryVariables } from "types/graphql"
 
-import { Link } from "@redwoodjs/router"
+import { Link, routes } from "@redwoodjs/router"
 import type {
     CellSuccessProps,
     CellFailureProps,
@@ -49,7 +49,9 @@ export const Success = ({
                     <div className="grid grid-cols-2 gap-6 mb-6">
                         {projects.map((item) => (
                             <Link
-                                to="#!"
+                                to={routes.workspaceProject({
+                                    slug: item.slug,
+                                })}
                                 key={item.id}
                                 className="project-card"
                             >
