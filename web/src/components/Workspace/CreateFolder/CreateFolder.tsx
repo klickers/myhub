@@ -92,35 +92,42 @@ const CreateFolder = ({ query, folders }: Props) => {
                     error={error}
                     formMethods={formMethods}
                 >
-                    <TextField
-                        name="name"
-                        placeholder="Folder Name"
-                        onChange={(e) =>
-                            setNewFolderSlug(slugify(e.target.value))
-                        }
-                        validation={{ required: true }}
-                    />
-                    <TextField
-                        name="slug"
-                        placeholder="folder-slug"
-                        value={newFolderSlug}
-                        validation={{ required: true }}
-                    />
-                    <Select
-                        ref={selectRef}
-                        name="parentId"
-                        className="select"
-                        placeholder="Parent Folder"
-                        options={folders.map((item: Item) => ({
-                            value: item.id,
-                            label: item.name,
-                        }))}
-                        classNames={{
-                            control: (state) =>
-                                state.isFocused ? "focused" : "",
-                            menuList: () => "menu-list",
-                        }}
-                    />
+                    <div>
+                        <Label name="name">Folder Name</Label>
+                        <TextField
+                            name="name"
+                            onChange={(e) =>
+                                setNewFolderSlug(slugify(e.target.value))
+                            }
+                            validation={{ required: true }}
+                        />
+                    </div>
+                    <div>
+                        <Label name="slug">Folder Slug</Label>
+                        <TextField
+                            name="slug"
+                            value={newFolderSlug}
+                            validation={{ required: true }}
+                        />
+                    </div>
+                    <div>
+                        <Label name="parentId">Parent Folder</Label>
+                        <Select
+                            ref={selectRef}
+                            name="parentId"
+                            className="select"
+                            placeholder="Select"
+                            options={folders.map((item: Item) => ({
+                                value: item.id,
+                                label: item.name,
+                            }))}
+                            classNames={{
+                                control: (state) =>
+                                    state.isFocused ? "focused" : "",
+                                menuList: () => "menu-list",
+                            }}
+                        />
+                    </div>
                     <Submit disabled={loading}>Create Folder</Submit>
                 </Form>
             </CustomModal>
