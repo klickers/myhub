@@ -20,6 +20,10 @@ h2 {
     @apply text-4xl font-semibold mb-8;
 }
 
+h3 {
+    @apply text-xl font-semibold mb-3;
+}
+
 p {
     @apply mb-3;
 }
@@ -35,14 +39,23 @@ a {
 form {
     @apply flex flex-col gap-3;
 
-    input {
-        @apply rounded-full border border-gray-300 w-full py-3 px-4 outline-none;
+    input,
+    textarea {
+        @apply border border-gray-300 w-full py-3 px-4 outline-none;
         &:focus {
             @apply border-black;
         }
         &::placeholder {
             @apply text-gray-400; // !important;
         }
+    }
+
+    input {
+        @apply rounded-full;
+    }
+
+    textarea {
+        @apply rounded-3xl;
     }
 
     .select {
@@ -72,13 +85,27 @@ form {
             }
         }
     }
+
+    p,
+    label {
+        @apply mb-1 pl-3 text-xs uppercase font-medium;
+    }
+
+    .form-flexgroup {
+        @apply flex gap-3 w-full;
+
+        & > * {
+            @apply w-full;
+        }
+    }
 }
 
-button {
+button,
+.button {
     @apply flex items-center gap-2 py-3 px-6 rounded-full w-auto bg-black text-white border border-black font-semibold;
 
     &:hover {
-        @apply text-black bg-white;
+        @apply text-black bg-white cursor-pointer;
     }
 
     svg {
@@ -91,15 +118,92 @@ button {
         a {
             @apply block no-underline py-1 px-4 rounded-full font-medium;
 
-            &:hover {
+            &:hover,
+            &.active-link {
                 @apply bg-gray-200;
             }
         }
     }
 }
 
-.ReactModal__Content {
-    @apply rounded-3xl border-0 p-8 !important;
+.ReactModalPortal {
+    .ReactModal__Content {
+        @apply pointer-events-none overflow-visible overflow-y-scroll h-screen left-0 right-0 top-0 fixed bg-transparent border-none !important;
+
+        & > div {
+            @apply pointer-events-auto relative bg-white mt-12 mb-10 rounded-3xl border-0 p-8 max-w-screen-md;
+            top: 50%;
+            left: 50%;
+            right: auto;
+            bottom: auto;
+            margin-right: -50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+}
+
+.react-datepicker__tab-loop {
+    .react-datepicker__aria-live {
+        @apply hidden;
+    }
+
+    .react-datepicker__month-container {
+        @apply rounded-3xl bg-white shadow-lg p-4;
+
+        .react-datepicker__header {
+            button {
+                @apply p-0.5;
+            }
+
+            .react-datepicker__day-names {
+                @apply grid grid-cols-7 text-center mt-2 mb-1 text-sm font-medium;
+
+                &.react-datepicker__day-name {
+                    @apply p-1;
+                }
+            }
+        }
+
+        .react-datepicker__month {
+            @apply flex flex-col text-sm;
+
+            .react-datepicker__week {
+                @apply grid grid-cols-7 text-center;
+
+                .react-datepicker__day {
+                    @apply p-1 rounded-full;
+
+                    &:hover {
+                        @apply bg-gray-100 cursor-pointer;
+                    }
+
+                    &.react-datepicker__day--outside-month {
+                        @apply text-gray-400;
+                    }
+
+                    &.react-datepicker__day--selected {
+                        @apply bg-gray-200;
+                    }
+                }
+            }
+        }
+    }
+
+    .react-datepicker__triangle {
+        @apply text-white;
+    }
+}
+
+.project-card {
+    @apply border border-gray-400 bg-white p-6 rounded-3xl no-underline;
+
+    &:hover {
+        @apply shadow-lg;
+    }
+
+    .project-card__dates {
+        @apply mb-0 text-xs mt-4 text-gray-700;
+    }
 }
 
 #sidenav {

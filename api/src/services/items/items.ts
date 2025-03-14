@@ -11,9 +11,13 @@ export const items: QueryResolvers["items"] = () => {
     return db.item.findMany({ where: { userId: context.currentUser.id } })
 }
 
-export const item: QueryResolvers["item"] = ({ id }) => {
-    return db.item.findUnique({
-        where: { id, userId: context.currentUser.id },
+export const item: QueryResolvers["item"] = ({ id, slug }) => {
+    return db.item.findFirst({
+        where: {
+            ...(id && { id }),
+            ...(slug && { slug }),
+            userId: context.currentUser.id,
+        },
     })
 }
 
@@ -35,6 +39,24 @@ export const folder: QueryResolvers["folder"] = ({ slug }) => {
             slug,
             type: "FOLDER" as ItemType,
             userId: context.currentUser.id,
+        },
+    })
+}
+
+export const projects: QueryResolvers["projects"] = ({ parentSlug }) => {
+    return db.item.findMany({
+        where: {
+            type: "PROJECT" as ItemType,
+            userId: context.currentUser.id,
+            parent: {
+                slug: parentSlug,
+            },
+        },
+        orderBy: {
+            dueDate: "asc",
+        },
+        include: {
+            parent: true,
         },
     })
 }

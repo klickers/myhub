@@ -25,10 +25,12 @@ export const schema = gql`
 
     type Query {
         items: [Item!]! @requireAuth
-        item(id: String!): Item @requireAuth
+        item(id: String, slug: String): Item @requireAuth
 
         folders: [Item!]! @requireAuth
         folder(slug: String!): Item @requireAuth
+
+        projects(parentSlug: String!): [Item!]! @requireAuth
     }
 
     input CreateItemInput {
