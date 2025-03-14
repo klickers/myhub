@@ -11,7 +11,7 @@ export const items: QueryResolvers["items"] = () => {
     return db.item.findMany({ where: { userId: context.currentUser.id } })
 }
 
-export const folders: QueryResolvers["items"] = () => {
+export const folders: QueryResolvers["folders"] = () => {
     return db.item.findMany({
         where: {
             type: "FOLDER" as ItemType,
