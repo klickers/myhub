@@ -41,7 +41,7 @@ const CustomDatePicker = (props: Props) => {
                         onClick={decreaseMonth}
                         disabled={prevMonthButtonDisabled}
                     >
-                        <Icon icon="gravity-ui:caret-left" />
+                        <Icon icon="gravity-ui:chevron-left" />
                     </button>
 
                     <select
@@ -75,7 +75,7 @@ const CustomDatePicker = (props: Props) => {
                         onClick={increaseMonth}
                         disabled={nextMonthButtonDisabled}
                     >
-                        <Icon icon="gravity-ui:caret-right" />
+                        <Icon icon="gravity-ui:chevron-right" />
                     </button>
                 </div>
             )}
