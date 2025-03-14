@@ -90,7 +90,7 @@ export const Success = ({
             toast.success("Project updated!")
             // redirect to project page
         },
-        refetchQueries: [{ query: QUERY }],
+        refetchQueries: [{ query: QUERY, variables: { slug: projectSlug } }],
         awaitRefetchQueries: true,
     })
 
