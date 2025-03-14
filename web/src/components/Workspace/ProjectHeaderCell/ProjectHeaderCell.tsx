@@ -1,8 +1,8 @@
+import { Icon } from "@iconify/react/dist/iconify.js"
 import type {
     FindProjectHeaderQuery,
     FindProjectHeaderQueryVariables,
     Item,
-    ItemType,
 } from "types/graphql"
 
 import { Link } from "@redwoodjs/router"
@@ -23,6 +23,7 @@ export const QUERY: TypedDocumentNode<
     query FindProjectHeaderQuery($slug: String!) {
         project(slug: $slug) {
             name
+            slug
             description
             parent {
                 name
@@ -62,7 +63,7 @@ export const Success = ({
     return (
         <>
             <Metadata title={project.name} description={project.description} />
-            <p className="text-xs flex gap-1">
+            <p className="flex gap-1">
                 {project.parent.parent && project.parent.parent.parent ? (
                     <Breadcrumb item={project.parent.parent.parent as Item} />
                 ) : null}
@@ -71,6 +72,12 @@ export const Success = ({
                 ) : null}
                 <Breadcrumb item={project.parent as Item} />
             </p>
+            <Link
+                to={routes.workspaceUpdateProject({ slug: project.slug })}
+                className="float-right"
+            >
+                <Icon icon="gravity-ui:pencil" />
+            </Link>
             <h2>{project.name}</h2>
         </>
     )

@@ -23,6 +23,7 @@ const Routes = () => {
                         <Route path="/dashboard/workspace" page={DashboardWorkspaceIndexPage} name="workspace" />
                         <Route path="/dashboard/workspace/folder/{slug}" page={DashboardWorkspaceFolderPage} name="workspaceFolder" />
                         <Route path="/dashboard/workspace/project/{slug}" page={DashboardWorkspaceProjectPage} name="workspaceProject" />
+                        <Route path="/dashboard/workspace/project/{slug}/update" page={DashboardWorkspaceUpdateProjectPage} name="workspaceUpdateProject" />
                     </Set>
                 </Set>
             </PrivateSet>

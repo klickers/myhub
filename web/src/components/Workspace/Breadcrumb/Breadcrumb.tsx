@@ -5,9 +5,10 @@ import { Link, routes } from "@redwoodjs/router"
 
 interface Props {
     item: Item
+    name?: string
 }
 
-const Breadcrumb = ({ item }: Props) => {
+const Breadcrumb = ({ item, name }: Props) => {
     return (
         <Link
             to={
@@ -19,9 +20,9 @@ const Breadcrumb = ({ item }: Props) => {
                           slug: item.slug,
                       })
             }
-            className="no-underline flex items-center hover:underline"
+            className="text-xs no-underline flex items-center hover:underline"
         >
-            {item.name}
+            {name ?? item.name}
             <Icon icon="gravity-ui:chevron-right" className="ml-1" />
         </Link>
     )
