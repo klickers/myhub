@@ -77,9 +77,7 @@ export const Success = ({
                             </Link>
                         ))}
                     </div>
-                ) : (
-                    <p>Create a project!</p>
-                )}
+                ) : null}
                 <CreateProject
                     parentId={parent.id}
                     query={{
