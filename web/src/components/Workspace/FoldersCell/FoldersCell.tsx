@@ -37,13 +37,13 @@ export const QUERY: TypedDocumentNode<FoldersQuery, FoldersQueryVariables> =
     `
 
 export const Loading = () => (
-    <div className="mb-6 rounded-3xl bg-gray-100 py-6 px-3">
+    <div className="mb-6 rounded-3xl bg-gray-100 p-6">
         <p>Loading folders...</p>
     </div>
 )
 
 export const Empty = () => (
-    <div className="mb-6 rounded-3xl bg-gray-100 py-6 px-3">
+    <div className="mb-6 rounded-3xl bg-gray-100 p-6">
         <p>Create a folder!</p>
     </div>
 )
