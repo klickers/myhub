@@ -1,6 +1,7 @@
 import type {
     FindProjectHeaderQuery,
     FindProjectHeaderQueryVariables,
+    Item,
     ItemType,
 } from "types/graphql"
 
@@ -12,6 +13,8 @@ import {
     type TypedDocumentNode,
     Metadata,
 } from "@redwoodjs/web"
+
+import Breadcrumb from "../Breadcrumb/Breadcrumb"
 
 export const QUERY: TypedDocumentNode<
     FindProjectHeaderQuery,
@@ -25,6 +28,16 @@ export const QUERY: TypedDocumentNode<
                 name
                 slug
                 type
+                parent {
+                    name
+                    slug
+                    type
+                    parent {
+                        name
+                        slug
+                        type
+                    }
+                }
             }
         }
     }
@@ -49,21 +62,14 @@ export const Success = ({
     return (
         <>
             <Metadata title={project.name} description={project.description} />
-            <p className="text-xs uppercase font-medium">
-                <Link
-                    to={
-                        project.parent.type == ("FOLDER" as ItemType)
-                            ? routes.workspaceFolder({
-                                  slug: project.parent.slug,
-                              })
-                            : routes.workspaceProject({
-                                  slug: project.parent.slug,
-                              })
-                    }
-                    className="no-underline"
-                >
-                    {project.parent.name} &nbsp;&gt;
-                </Link>
+            <p className="text-xs flex gap-1">
+                {project.parent.parent && project.parent.parent.parent ? (
+                    <Breadcrumb item={project.parent.parent.parent as Item} />
+                ) : null}
+                {project.parent.parent ? (
+                    <Breadcrumb item={project.parent.parent as Item} />
+                ) : null}
+                <Breadcrumb item={project.parent as Item} />
             </p>
             <h2>{project.name}</h2>
         </>
