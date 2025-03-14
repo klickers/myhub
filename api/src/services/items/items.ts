@@ -31,6 +31,16 @@ export const item: QueryResolvers["item"] = ({ id }) => {
     })
 }
 
+export const folder: QueryResolvers["folder"] = ({ slug }) => {
+    return db.item.findFirst({
+        where: {
+            slug,
+            type: "FOLDER" as ItemType,
+            userId,
+        },
+    })
+}
+
 export const createItem: MutationResolvers["createItem"] = ({ input }) => {
     return db.item.create({
         data: { ...input, userId: context.currentUser.id },
