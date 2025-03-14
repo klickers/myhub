@@ -27,8 +27,8 @@ export const schema = gql`
         items: [Item!]! @requireAuth
         item(id: String!): Item @requireAuth
 
-        folder(slug: String!): Item @requireAuth
         folders: [Item!]! @requireAuth
+        folder(slug: String!): Item @requireAuth
     }
 
     input CreateItemInput {
