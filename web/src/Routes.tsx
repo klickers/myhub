@@ -21,6 +21,7 @@ const Routes = () => {
                     <Route path="/dashboard" page={DashboardIndexPage} name="dashboard" />
                     <Set wrap={WorkspaceLayout} title="Workspace">
                         <Route path="/dashboard/workspace" page={DashboardWorkspaceIndexPage} name="workspace" />
+                        <Route path="/dashboard/workspace/folder/{slug}" page={DashboardWorkspaceFolderPage} name="workspaceFolder" />
                     </Set>
                 </Set>
             </PrivateSet>

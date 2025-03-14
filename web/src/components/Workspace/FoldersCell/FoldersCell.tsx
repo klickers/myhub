@@ -18,7 +18,7 @@ import {
     TextField,
     useForm,
 } from "@redwoodjs/forms"
-import { NavLink } from "@redwoodjs/router"
+import { NavLink, routes } from "@redwoodjs/router"
 import type {
     CellSuccessProps,
     CellFailureProps,
@@ -157,7 +157,10 @@ export const Success = ({
                             key={item.slug}
                             style={{ marginLeft: item.depth + "rem" }}
                         >
-                            <NavLink to="#!" activeClassName="active-link">
+                            <NavLink
+                                to={routes.workspaceFolder({ slug: item.slug })}
+                                activeClassName="active-link"
+                            >
                                 {item.name}
                             </NavLink>
                         </li>
