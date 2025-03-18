@@ -80,6 +80,7 @@ export const Success = ({
                                     to={routes.workspaceUpdateProject({
                                         slug: item.slug,
                                     })}
+                                    className="project-card__edit"
                                 >
                                     <Icon icon="gravity-ui:pencil" />
                                 </Link>

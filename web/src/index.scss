@@ -200,16 +200,16 @@ button,
         @apply shadow-lg;
     }
 
-    a {
-        @apply p-6;
-    }
-
     .project-card__link {
         @apply p-6 no-underline block w-full;
 
         .project-card__dates {
             @apply mb-0 text-xs mt-4 text-gray-700;
         }
+    }
+
+    .project-card__edit {
+        @apply py-6 pr-6;
     }
 }
 
