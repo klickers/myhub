@@ -24,17 +24,22 @@ enum ItemType {
 }
 
 model Item {
-    id          String    @id @default(uuid())
-    type        ItemType
-    name        String
-    slug        String
-    description String?
-    notes       String?   @db.Text
-    startDate   DateTime?
-    dueDate     DateTime?
-    parentId    String?
-    statusId    Int?
-    userId      String
+    id                 String    @id @default(uuid())
+    type               ItemType
+    name               String
+    slug               String
+    description        String?
+    notes              String?   @db.Text
+    startDate          DateTime?
+    softDueDate        DateTime?
+    dueDate            DateTime?
+    estimatedTime      Int?
+    minBlockTime       Int?
+    maxBlockTime       Int?
+    maxBlockTimePerDay Int?
+    parentId           String?
+    statusId           Int?
+    userId             String
 
     parent   Item?       @relation("ParentChild", fields: [parentId], references: [id])
     children Item[]      @relation("ParentChild")

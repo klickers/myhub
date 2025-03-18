@@ -7,7 +7,12 @@ export const schema = gql`
         description: String
         notes: String
         startDate: DateTime
+        softDueDate: DateTime
         dueDate: DateTime
+        estimatedTime: Int
+        minBlockTime: Int
+        maxBlockTime: Int
+        maxBlockTimePerDay: Int
         parentId: String
         statusId: Int
         userId: String!
@@ -32,6 +37,8 @@ export const schema = gql`
 
         projects(parentSlug: String!): [Item!]! @requireAuth
         project(slug: String!): Item @requireAuth
+
+        tasks(parentSlug: String!): [Item!]! @requireAuth
     }
 
     input CreateItemInput {
@@ -41,7 +48,12 @@ export const schema = gql`
         description: String
         notes: String
         startDate: DateTime
+        softDueDate: DateTime
         dueDate: DateTime
+        estimatedTime: Int
+        minBlockTime: Int
+        maxBlockTime: Int
+        maxBlockTimePerDay: Int
         parentId: String
         statusId: Int
         userId: String
@@ -54,7 +66,12 @@ export const schema = gql`
         description: String
         notes: String
         startDate: DateTime
+        softDueDate: DateTime
         dueDate: DateTime
+        estimatedTime: Int
+        minBlockTime: Int
+        maxBlockTime: Int
+        maxBlockTimePerDay: Int
         parentId: String
         statusId: Int
         userId: String

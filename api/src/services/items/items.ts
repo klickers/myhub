@@ -83,6 +83,42 @@ export const project: QueryResolvers["project"] = ({ slug }) => {
     })
 }
 
+export const tasks: QueryResolvers["tasks"] = ({ parentSlug }) => {
+    return db.item.findMany({
+        where: {
+            type: "TASK" as ItemType,
+            userId: context.currentUser.id,
+            parent: {
+                slug: parentSlug,
+            },
+        },
+        orderBy: [
+            {
+                dueDate: {
+                    sort: "asc",
+                    nulls: "last",
+                },
+            },
+            {
+                softDueDate: {
+                    sort: "asc",
+                    nulls: "last",
+                },
+            },
+            {
+                startDate: {
+                    sort: "asc",
+                    nulls: "last",
+                },
+            },
+            { name: "asc" },
+        ],
+        include: {
+            parent: true,
+        },
+    })
+}
+
 export const createItem: MutationResolvers["createItem"] = ({ input }) => {
     return db.item.create({
         data: { ...input, userId: context.currentUser.id },
