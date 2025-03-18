@@ -22,7 +22,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 />
                 <div className="mt-10">
                     <SidebarButton
-                        to="#!"
+                        to={routes.calendar()}
                         icon="gravity-ui:calendar"
                         label="Calendar"
                     />

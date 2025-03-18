@@ -16,6 +16,7 @@ const Routes = () => {
                         <Route path="/dashboard/workspace/project/{slug}" page={DashboardWorkspaceProjectPage} name="workspaceProject" />
                         <Route path="/dashboard/workspace/project/{slug}/update" page={DashboardWorkspaceUpdateProjectPage} name="workspaceUpdateProject" />
                     </Set>
+                    <Route path="/dashboard/calendar" page={DashboardCalendarIndexPage} name="calendar" />
                 </Set>
             </PrivateSet>
             <Route path="/" page={LandingPage} name="landing" />
