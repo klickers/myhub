@@ -1,3 +1,4 @@
+import { Icon } from "@iconify/react/dist/iconify.js"
 import { format } from "date-fns"
 import type { ProjectsQuery, ProjectsQueryVariables } from "types/graphql"
 
@@ -48,33 +49,41 @@ export const Success = ({
                 {projects.length > 0 ? (
                     <div className="grid grid-cols-2 gap-6 mb-6">
                         {projects.map((item) => (
-                            <Link
-                                to={routes.workspaceProject({
-                                    slug: item.slug,
-                                })}
-                                key={item.id}
-                                className="project-card"
-                            >
-                                <h3>{item.name}</h3>
-                                <p>{item.description}</p>
-                                {item.startDate || item.dueDate ? (
-                                    <p className="project-card__dates">
-                                        {item.startDate
-                                            ? format(
-                                                  item.startDate,
-                                                  "MMM dd, yyyy"
-                                              )
-                                            : "N/A"}{" "}
-                                        -{" "}
-                                        {item.dueDate
-                                            ? format(
-                                                  item.dueDate,
-                                                  "MMM dd, yyyy"
-                                              )
-                                            : "N/A"}
-                                    </p>
-                                ) : null}
-                            </Link>
+                            <div key={item.id} className="project-card">
+                                <Link
+                                    to={routes.workspaceProject({
+                                        slug: item.slug,
+                                    })}
+                                    className="project-card__link"
+                                >
+                                    <h3>{item.name}</h3>
+                                    <p>{item.description}</p>
+                                    {item.startDate || item.dueDate ? (
+                                        <p className="project-card__dates">
+                                            {item.startDate
+                                                ? format(
+                                                      item.startDate,
+                                                      "MMM dd, yyyy"
+                                                  )
+                                                : "N/A"}{" "}
+                                            -{" "}
+                                            {item.dueDate
+                                                ? format(
+                                                      item.dueDate,
+                                                      "MMM dd, yyyy"
+                                                  )
+                                                : "N/A"}
+                                        </p>
+                                    ) : null}
+                                </Link>
+                                <Link
+                                    to={routes.workspaceUpdateProject({
+                                        slug: item.slug,
+                                    })}
+                                >
+                                    <Icon icon="gravity-ui:pencil" />
+                                </Link>
+                            </div>
                         ))}
                     </div>
                 ) : null}
