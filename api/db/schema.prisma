@@ -13,8 +13,10 @@ model User {
     clerkId String @id
     email   String @unique
 
-    items        Item[]
-    itemStatuses ItemStatus[]
+    items          Item[]
+    itemStatuses   ItemStatus[]
+    timeBlocks     TimeBlock[]
+    timeBlockTypes TimeBlockType[]
 }
 
 enum ItemType {
@@ -59,4 +61,29 @@ model ItemStatus {
     items Item[]
 
     @@unique([userId, status])
+}
+
+model TimeBlock {
+    id     Int      @id @default(autoincrement())
+    start  DateTime
+    end    DateTime
+    typeId Int
+    notes  String?
+    userId String
+
+    type TimeBlockType @relation(fields: [typeId], references: [id])
+    user User          @relation(fields: [userId], references: [clerkId])
+
+    @@unique([userId, start, end])
+}
+
+model TimeBlockType {
+    id     Int    @id @default(autoincrement())
+    name   String
+    userId String
+
+    user       User        @relation(fields: [userId], references: [clerkId])
+    timeBlocks TimeBlock[]
+
+    @@unique([userId, name])
 }

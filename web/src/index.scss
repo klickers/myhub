@@ -127,11 +127,15 @@ button,
 }
 
 .ReactModalPortal {
+    .ReactModal__Overlay {
+        @apply z-30;
+    }
+
     .ReactModal__Content {
         @apply pointer-events-none overflow-visible overflow-y-scroll h-screen left-0 right-0 top-0 fixed bg-transparent border-none !important;
 
         & > div {
-            @apply pointer-events-auto relative top-0 bg-white my-10 rounded-3xl border-0 p-8 max-w-screen-md;
+            @apply z-40 pointer-events-auto relative top-0 bg-white my-10 rounded-3xl border-0 p-8 max-w-screen-md;
             left: 50%;
             right: auto;
             bottom: auto;
@@ -259,3 +263,5 @@ button,
         }
     }
 }
+
+@import "./styles/fullcalendar.scss";

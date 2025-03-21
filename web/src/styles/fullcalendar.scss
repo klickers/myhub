@@ -1,0 +1,29 @@
+.fc {
+    .fc-scrollgrid-liquid {
+        @apply border-gray-200 rounded-3xl overflow-hidden;
+    }
+
+    .fc-scroller {
+        //@apply overflow-hidden;
+    }
+
+    .fc-timegrid-axis-cushion {
+        @apply no-underline uppercase font-medium text-sm pr-1;
+    }
+
+    .fc-col-header-cell.fc-day {
+        @apply py-2 px-2;
+
+        .fc-col-header-cell-cushion {
+            @apply no-underline uppercase font-medium text-sm w-full;
+        }
+    }
+
+    .fc-event {
+        @apply rounded-xl py-1 px-2;
+
+        &.event--time-block {
+            @apply bg-gray-200 border-gray-200 text-gray-700;
+        }
+    }
+}
