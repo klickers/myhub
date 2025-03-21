@@ -26,7 +26,7 @@ export const schema = gql`
         start: DateTime!
         end: DateTime!
         notes: String
-        userId: String!
+        userId: String
         itemId: String
     }
 

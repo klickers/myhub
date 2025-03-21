@@ -7,12 +7,12 @@ import type {
 import { db } from "src/lib/db"
 
 export const sessions: QueryResolvers["sessions"] = () => {
-    return db.session.findMany()
+    return db.session.findMany({ where: { userId: context.currentUser.id } })
 }
 
 export const session: QueryResolvers["session"] = ({ id }) => {
     return db.session.findUnique({
-        where: { id },
+        where: { id, userId: context.currentUser.id },
     })
 }
 
@@ -20,7 +20,7 @@ export const createSession: MutationResolvers["createSession"] = ({
     input,
 }) => {
     return db.session.create({
-        data: input,
+        data: { ...input, userId: context.currentUser.id },
     })
 }
 
@@ -30,13 +30,13 @@ export const updateSession: MutationResolvers["updateSession"] = ({
 }) => {
     return db.session.update({
         data: input,
-        where: { id },
+        where: { id, userId: context.currentUser.id },
     })
 }
 
 export const deleteSession: MutationResolvers["deleteSession"] = ({ id }) => {
     return db.session.delete({
-        where: { id },
+        where: { id, userId: context.currentUser.id },
     })
 }
 
