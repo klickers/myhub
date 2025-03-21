@@ -1,14 +1,21 @@
 import { useEffect, useRef, useState } from "react"
 
-import { identity } from "@fullcalendar/core/internal"
 import interactionPlugin from "@fullcalendar/interaction"
 import FullCalendar from "@fullcalendar/react"
 import timeGridPlugin from "@fullcalendar/timegrid"
 import { Icon } from "@iconify/react/dist/iconify.js"
-import { addHours, endOfWeek, format, startOfWeek } from "date-fns"
+import {
+    addHours,
+    differenceInMinutes,
+    endOfWeek,
+    format,
+    startOfWeek,
+} from "date-fns"
 import {
     CreateTimeBlockMutation,
     CreateTimeBlockMutationVariables,
+    Item,
+    TimeBlock,
     UpdateTimeBlockMutation,
     UpdateTimeBlockMutationVariables,
 } from "types/graphql"
@@ -16,7 +23,24 @@ import {
 import { Metadata, useMutation, useQuery } from "@redwoodjs/web"
 import { toast } from "@redwoodjs/web/toast"
 
+import TasksCell from "src/components/Workspace/TasksCell"
+
 import TimeBlockSidebar from "../../../../components/Calendar/TimeBlockSidebar/TimeBlockSidebar"
+
+const QUERY_TASKS = gql`
+    query TasksQuery {
+        tasks {
+            id
+            name
+            softDueDate
+            dueDate
+            estimatedTime
+            minBlockTime
+            maxBlockTime
+            maxBlockTimePerDay
+        }
+    }
+`
 
 const QUERY_TIME_BLOCKS = gql`
     query TimeBlocksQuery($start: DateTime!, $end: DateTime!) {
@@ -173,6 +197,87 @@ const IndexPage = () => {
         })
     }
 
+    // *****************************************
+    // *
+    // * Calculate task fitting
+    // *
+    // *****************************************
+    const queryTasks = useQuery(QUERY_TASKS)
+
+    function recalculate() {
+        const tasks = queryTasks.data.tasks
+            .filter((task: Item) => task.estimatedTime != null)
+            .map((task: Item) => {
+                return { ...task, timeRemaining: task.estimatedTime }
+            })
+
+        let { timeBlocks } = queryTimeBlocks.data
+        timeBlocks = timeBlocks.map((block) => {
+            const timePlanned = 0
+            const totalTime = differenceInMinutes(block.end, block.start)
+            const timeRemaining = totalTime - timePlanned
+            return {
+                ...block,
+                sessions: [],
+                timePlanned,
+                timeRemaining,
+                totalTime,
+            }
+        })
+
+        // start from time now (to nearest quarter)
+        // take sorted tasks to distribute
+
+        timeBlocks.forEach((block) => {
+            for (let i = 0; i < tasks.length; i++) {
+                // assuming minBlockTime == estimatedTime if none is given
+                let sessionLength = 0
+                if (tasks[i].timeRemaining > 0 && block.timeRemaining > 0) {
+                    if (
+                        !tasks[i].minBlockTime &&
+                        tasks[i].timeRemaining <= block.timeRemaining
+                    )
+                        sessionLength = tasks[i].timeRemaining
+                    else if (
+                        tasks[i].minBlockTime &&
+                        tasks[i].minBlockTime <= block.timeRemaining
+                    ) {
+                        if (
+                            tasks[i].timeRemaining <= block.timeRemaining &&
+                            tasks[i].maxBlockTime >= tasks[i].timeRemaining
+                        )
+                            sessionLength = tasks[i].timeRemaining
+                        else if (
+                            tasks[i].maxBlockTime <= block.timeRemaining &&
+                            (tasks[i].timeRemaining - tasks[i].maxBlockTime ==
+                                0 ||
+                                tasks[i].timeRemaining -
+                                    tasks[i].maxBlockTime >=
+                                    tasks[i].minBlockTime)
+                        )
+                            sessionLength = tasks[i].maxBlockTime
+                        else if (tasks[i].maxBlockTime > block.timeRemaining)
+                            sessionLength = Math.min(
+                                tasks[i].timeRemaining - tasks[i].minBlockTime,
+                                block.timeRemaining
+                            )
+                    }
+                }
+                if (sessionLength > 0) {
+                    block.sessions.push({
+                        name: tasks[i].name,
+                        minBlockTime: tasks[i].minBlockTime,
+                        maxBlockTime: tasks[i].maxBlockTime,
+                        sessionLength,
+                    })
+                    block.timePlanned += sessionLength
+                    block.timeRemaining -= sessionLength
+                    tasks[i].timeRemaining -= sessionLength
+                }
+            }
+        })
+    }
+
     return (
         <>
             <Metadata title="Calendar" description="Dashboard calendar" />
@@ -235,22 +340,6 @@ function renderDayHeaderContent(eventInfo) {
             <span>{format(eventInfo.date, "MMM dd")}</span>
         </div>
     )
-}
-
-function recalculate() {
-    console.log("here")
-    // params: tasks, time blocks
-
-    // start from time now (to nearest quarter)
-    // take sorted tasks to distribute
-    // per time block: tasks planned within, time planned, empty time remaining, total time
-
-    // start with first task, split by estimated time and min/max times
-    // first split by max times, distributing one in each block, making sure not to go over max in a day
-
-    // per split:
-    // if split does not fit in remaining block time, if remaining time in block is greater/equal to min time, split
-    // make sure each split does not force remaining time to be less than min time
 }
 
 export default IndexPage

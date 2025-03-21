@@ -38,7 +38,7 @@ export const schema = gql`
         projects(parentSlug: String!): [Item!]! @requireAuth
         project(slug: String!): Item @requireAuth
 
-        tasks(parentSlug: String!): [Item!]! @requireAuth
+        tasks(parentSlug: String): [Item!]! @requireAuth
     }
 
     input CreateItemInput {

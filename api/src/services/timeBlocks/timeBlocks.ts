@@ -24,6 +24,9 @@ export const timeBlocks: QueryResolvers["timeBlocks"] = ({ start, end }) => {
                 },
             ],
         },
+        orderBy: {
+            start: "asc",
+        },
     })
 }
 

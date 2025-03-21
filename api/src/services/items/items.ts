@@ -88,9 +88,11 @@ export const tasks: QueryResolvers["tasks"] = ({ parentSlug }) => {
         where: {
             type: "TASK" as ItemType,
             userId: context.currentUser.id,
-            parent: {
-                slug: parentSlug,
-            },
+            ...(parentSlug && {
+                parent: {
+                    slug: parentSlug,
+                },
+            }),
         },
         orderBy: [
             {
