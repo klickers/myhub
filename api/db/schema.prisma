@@ -17,6 +17,7 @@ model User {
     itemStatuses   ItemStatus[]
     timeBlocks     TimeBlock[]
     timeBlockTypes TimeBlockType[]
+    sessions       Session[]
 }
 
 enum ItemType {
@@ -47,6 +48,7 @@ model Item {
     children Item[]      @relation("ParentChild")
     status   ItemStatus? @relation(fields: [statusId], references: [id])
     user     User        @relation(fields: [userId], references: [clerkId])
+    Session  Session[]
 
     @@unique([userId, slug])
 }
@@ -82,8 +84,27 @@ model TimeBlockType {
     name   String
     userId String
 
-    user       User        @relation(fields: [userId], references: [clerkId])
+    user User @relation(fields: [userId], references: [clerkId])
+
     timeBlocks TimeBlock[]
 
     @@unique([userId, name])
+}
+
+enum SessionType {
+    PLANNED
+    TRACKED
+}
+
+model Session {
+    id     Int         @id @default(autoincrement())
+    type   SessionType
+    start  DateTime
+    end    DateTime
+    notes  String?
+    userId String
+    itemId String?
+
+    user User  @relation(fields: [userId], references: [clerkId])
+    item Item? @relation(fields: [itemId], references: [id])
 }
