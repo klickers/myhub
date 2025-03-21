@@ -88,7 +88,8 @@ form {
 
     p,
     label {
-        @apply mb-1 pl-3 text-xs uppercase font-medium;
+        @extend .eyebrow;
+        @apply pl-3;
     }
 
     .form-flexgroup {
@@ -98,6 +99,10 @@ form {
             @apply w-full;
         }
     }
+}
+
+.eyebrow {
+    @apply mb-1 text-xs uppercase font-medium;
 }
 
 button,
@@ -214,6 +219,16 @@ button,
 
     .project-card__edit {
         @apply py-6 pr-6;
+    }
+}
+
+table.tasks {
+    th {
+        @extend .eyebrow;
+        @apply text-left;
+    }
+    td {
+        @apply pt-2 pb-1;
     }
 }
 

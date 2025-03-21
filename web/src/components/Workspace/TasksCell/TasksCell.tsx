@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react/dist/iconify.js"
+import { format } from "date-fns"
 import type { TasksQuery, TasksQueryVariables } from "types/graphql"
 
 import type {
@@ -45,17 +46,38 @@ export const Success = ({
     return (
         <>
             <h3>Tasks</h3>
-            <ul className="mb-6">
-                {tasks.map((item) => (
-                    <div
-                        key={item.id}
-                        className="flex items-center gap-2 mb-3 pb-1 border-b border-gray-200"
-                    >
-                        <Icon icon="gravity-ui:circle" />
-                        <p className="mb-0">{item.name}</p>
-                    </div>
-                ))}
-            </ul>
+            <table className="tasks mb-6 w-full">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Est. Time</th>
+                        <th>Soft Due</th>
+                        <th>Due Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {tasks.map((item) => (
+                        <tr key={item.id} className="border-b border-gray-200">
+                            <td>
+                                <Icon icon="gravity-ui:circle" />
+                            </td>
+                            <td>{item.name}</td>
+                            <td>{item.estimatedTime}</td>
+                            <td>
+                                {item.softDueDate
+                                    ? format(item.softDueDate, "MM/dd")
+                                    : null}
+                            </td>
+                            <td>
+                                {item.dueDate
+                                    ? format(item.dueDate, "MM/dd")
+                                    : null}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
             <CreateTask
                 parentId={parent.id}
                 query={{ query: QUERY, variables: { parentSlug } }}
