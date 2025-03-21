@@ -6,8 +6,29 @@ import type {
 
 import { db } from "src/lib/db"
 
-export const sessions: QueryResolvers["sessions"] = () => {
-    return db.session.findMany({ where: { userId: context.currentUser.id } })
+export const sessions: QueryResolvers["sessions"] = ({ start, end }) => {
+    return db.session.findMany({
+        where: {
+            OR: [
+                {
+                    start: {
+                        lte: end,
+                        gte: start,
+                    },
+                },
+                {
+                    end: {
+                        lte: end,
+                        gte: start,
+                    },
+                },
+            ],
+            userId: context.currentUser.id,
+        },
+        orderBy: {
+            start: "asc",
+        },
+    })
 }
 
 export const session: QueryResolvers["session"] = ({ id }) => {
