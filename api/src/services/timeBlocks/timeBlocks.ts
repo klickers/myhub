@@ -23,6 +23,7 @@ export const timeBlocks: QueryResolvers["timeBlocks"] = ({ start, end }) => {
                     },
                 },
             ],
+            userId: context.currentUser.id,
         },
         orderBy: {
             start: "asc",
@@ -32,7 +33,7 @@ export const timeBlocks: QueryResolvers["timeBlocks"] = ({ start, end }) => {
 
 export const timeBlock: QueryResolvers["timeBlock"] = ({ id }) => {
     return db.timeBlock.findUnique({
-        where: { id },
+        where: { id, userId: context.currentUser.id },
     })
 }
 
@@ -50,7 +51,7 @@ export const updateTimeBlock: MutationResolvers["updateTimeBlock"] = ({
 }) => {
     return db.timeBlock.update({
         data: input,
-        where: { id },
+        where: { id, userId: context.currentUser.id },
     })
 }
 
@@ -58,7 +59,7 @@ export const deleteTimeBlock: MutationResolvers["deleteTimeBlock"] = ({
     id,
 }) => {
     return db.timeBlock.delete({
-        where: { id },
+        where: { id, userId: context.currentUser.id },
     })
 }
 
