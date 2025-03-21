@@ -15,7 +15,6 @@ import {
     CreateTimeBlockMutation,
     CreateTimeBlockMutationVariables,
     Item,
-    TimeBlock,
     UpdateTimeBlockMutation,
     UpdateTimeBlockMutationVariables,
 } from "types/graphql"
@@ -23,12 +22,10 @@ import {
 import { Metadata, useMutation, useQuery } from "@redwoodjs/web"
 import { toast } from "@redwoodjs/web/toast"
 
-import TasksCell from "src/components/Workspace/TasksCell"
-
 import TimeBlockSidebar from "../../../../components/Calendar/TimeBlockSidebar/TimeBlockSidebar"
 
 const QUERY_TASKS = gql`
-    query TasksQuery {
+    query CalendarTasksQuery {
         tasks {
             id
             name
@@ -208,6 +205,8 @@ const IndexPage = () => {
         const tasks = queryTasks.data.tasks
             .filter((task: Item) => task.estimatedTime != null)
             .map((task: Item) => {
+                if (task.minBlockTime && !task.maxBlockTime)
+                    task.maxBlockTime = task.estimatedTime
                 return { ...task, timeRemaining: task.estimatedTime }
             })
 
@@ -231,6 +230,7 @@ const IndexPage = () => {
         timeBlocks.forEach((block) => {
             for (let i = 0; i < tasks.length; i++) {
                 // assuming minBlockTime == estimatedTime if none is given
+                // assuming maxBlockTime == estimatedTime if only minBlockTime given
                 let sessionLength = 0
                 if (tasks[i].timeRemaining > 0 && block.timeRemaining > 0) {
                     if (
