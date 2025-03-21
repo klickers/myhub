@@ -230,6 +230,9 @@ table.tasks {
     td {
         @apply pt-2 pb-1;
     }
+    .number {
+        @apply text-right;
+    }
 }
 
 #sidenav {
