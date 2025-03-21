@@ -225,11 +225,19 @@ button,
 table.tasks {
     th {
         @extend .eyebrow;
-        @apply text-left;
+        @apply text-left px-1 whitespace-nowrap;
     }
+
     td {
-        @apply pt-2 pb-1;
+        @apply pt-2 pb-1 px-1;
+
+        .react-datepicker-wrapper {
+            input {
+                @apply text-right;
+            }
+        }
     }
+
     .number {
         @apply text-right;
     }
