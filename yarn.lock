@@ -2801,6 +2801,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fullcalendar/google-calendar@npm:^6.1.15":
+  version: 6.1.15
+  resolution: "@fullcalendar/google-calendar@npm:6.1.15"
+  peerDependencies:
+    "@fullcalendar/core": ~6.1.15
+  checksum: 10c0/ed2e547c69dac2ae647392ef395bb6304e46de536fca02df84a7df13617f304c2e57ae3aa6c529868134371f7f10dd7e620581f20005a11c50b97d1324e3393a
+  languageName: node
+  linkType: hard
+
 "@fullcalendar/interaction@npm:^6.1.15":
   version: 6.1.15
   resolution: "@fullcalendar/interaction@npm:6.1.15"
@@ -19411,6 +19420,7 @@ __metadata:
     "@auth0/auth0-spa-js": "npm:^2"
     "@clerk/clerk-react": "npm:^4"
     "@fullcalendar/core": "npm:^6.1.15"
+    "@fullcalendar/google-calendar": "npm:^6.1.15"
     "@fullcalendar/interaction": "npm:^6.1.15"
     "@fullcalendar/react": "npm:^6.1.15"
     "@fullcalendar/timegrid": "npm:^6.1.15"
