@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react/dist/iconify.js"
 import { format } from "date-fns"
 import ContentEditable from "react-contenteditable"
 import type {
+    Item,
     TasksQuery,
     TasksQueryVariables,
     UpdateTaskMutation,
@@ -65,7 +66,7 @@ export const Success = ({
     parent,
     parentSlug,
 }: CellSuccessProps<TasksQuery, TasksQueryVariables>) => {
-    const [stateTasks, setStateTasks] = useState(tasks)
+    const [stateTasks, setStateTasks] = useState<Item[]>(tasks as Item[])
     const [inputChangeTimer, setInputChangeTimer] = useState(null)
 
     const [update, { loading, error }] = useMutation<
@@ -143,9 +144,11 @@ export const Success = ({
                                     />
                                 </td>
                                 <td className="number">
-                                    {Math.round(
-                                        (item.estimatedTime / 60) * 100
-                                    ) / 100}
+                                    {item.estimatedTime
+                                        ? Math.round(
+                                              (item.estimatedTime / 60) * 100
+                                          ) / 100
+                                        : 0}
                                 </td>
                                 <td className="number">
                                     <ContentEditable
@@ -226,7 +229,8 @@ export const Success = ({
             ) : null}
             <CreateTask
                 parentId={parent.id}
-                query={{ query: QUERY, variables: { parentSlug } }}
+                tasks={stateTasks}
+                setTasks={setStateTasks}
             />
         </>
     )

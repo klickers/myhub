@@ -6,6 +6,7 @@ import slugify from "react-slugify"
 import {
     CreateTaskMutation,
     CreateTaskMutationVariables,
+    Item,
     ItemType,
 } from "types/graphql"
 
@@ -26,7 +27,8 @@ import CustomModal from "src/components/CustomModal/CustomModal"
 
 interface Props {
     parentId: string
-    query: InternalRefetchQueryDescriptor
+    tasks: Item[]
+    setTasks: React.Dispatch<React.SetStateAction<Item[]>>
 }
 
 interface FormValues {
@@ -42,7 +44,7 @@ const CREATE_PROJECT = gql`
     }
 `
 
-const CreateTask = ({ parentId, query }: Props) => {
+const CreateTask = ({ parentId, tasks, setTasks }: Props) => {
     const modalRef = useRef()
 
     const [startDate, setStartDate] = useState(null)
@@ -61,12 +63,10 @@ const CreateTask = ({ parentId, query }: Props) => {
             setDueDate(null)
             setSoftDueDate(null)
         },
-        refetchQueries: [query],
-        awaitRefetchQueries: true,
     })
 
-    const onSubmit: SubmitHandler<FormValues> = (data) => {
-        create({
+    const onSubmit: SubmitHandler<FormValues> = async (data) => {
+        const res = await create({
             variables: {
                 input: {
                     ...data,
@@ -79,6 +79,15 @@ const CreateTask = ({ parentId, query }: Props) => {
                 },
             },
         })
+        setTasks([
+            ...tasks,
+            {
+                id: res.data.createItem.id,
+                ...data,
+                softDueDate,
+                dueDate,
+            } as Item,
+        ])
         modalRef.current.closeModal()
     }
 
