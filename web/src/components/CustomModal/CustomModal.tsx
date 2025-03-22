@@ -44,7 +44,10 @@ const CustomModal = forwardRef((props, ref) => {
             contentLabel="Add Folder"
         >
             <div>
-                <button onClick={closeModal} className="float-right px-3">
+                <button
+                    onClick={closeModal}
+                    className="float-right button--circle"
+                >
                     <Icon icon="gravity-ui:circle-xmark" />
                 </button>
                 {props.children}

@@ -2,6 +2,7 @@ import type {
     QueryResolvers,
     MutationResolvers,
     SessionRelationResolvers,
+    CreateSessionInput,
 } from "types/graphql"
 
 import { db } from "src/lib/db"
@@ -58,6 +59,16 @@ export const updateSession: MutationResolvers["updateSession"] = ({
 export const deleteSession: MutationResolvers["deleteSession"] = ({ id }) => {
     return db.session.delete({
         where: { id, userId: context.currentUser.id },
+    })
+}
+
+export const createSessions: MutationResolvers["createSessions"] = ({
+    input,
+}) => {
+    return db.session.createMany({
+        data: input.map((i: CreateSessionInput) => {
+            return { ...i, userId: context.currentUser.id }
+        }),
     })
 }
 

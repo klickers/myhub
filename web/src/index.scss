@@ -113,6 +113,10 @@ button,
         @apply text-black bg-white cursor-pointer;
     }
 
+    &.button--circle {
+        @apply px-3;
+    }
+
     svg {
         @apply w-5 h-5;
     }

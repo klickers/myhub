@@ -6,6 +6,7 @@ import timeGridPlugin from "@fullcalendar/timegrid"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import {
     addHours,
+    addMinutes,
     differenceInMinutes,
     endOfWeek,
     format,
@@ -19,12 +20,16 @@ import {
     UpdateTimeBlockMutationVariables,
     DeleteTimeBlockMutation,
     DeleteTimeBlockMutationVariables,
+    CreateSessionsMutation,
+    CreateSessionsMutationVariables,
+    SessionType,
 } from "types/graphql"
 
 import { Metadata, useMutation, useQuery } from "@redwoodjs/web"
 import { toast } from "@redwoodjs/web/toast"
 
 import CustomModal from "src/components/CustomModal/CustomModal"
+import Breadcrumb from "src/components/Workspace/Breadcrumb/Breadcrumb"
 
 import TimeBlockSidebar from "../../../../components/Calendar/TimeBlockSidebar/TimeBlockSidebar"
 
@@ -80,6 +85,32 @@ const DELETE_TIME_BLOCK = gql`
     }
 `
 
+const QUERY_SESSIONS = gql`
+    query SessionsQuery($start: DateTime!, $end: DateTime!) {
+        sessions(start: $start, end: $end) {
+            id
+            start
+            end
+            item {
+                name
+                parent {
+                    type
+                    name
+                    slug
+                }
+            }
+        }
+    }
+`
+
+const CREATE_SESSIONS = gql`
+    mutation CreateSessionsMutation($input: [CreateSessionInput!]!) {
+        createSessions(input: $input) {
+            id
+        }
+    }
+`
+
 const IndexPage = () => {
     const fcRef = useRef(null)
     const modalRef = useRef()
@@ -98,6 +129,14 @@ const IndexPage = () => {
 
     const [modalEvent, setModalEvent] = useState(null)
 
+    const [sessions, setSessions] = useState([])
+    const querySessions = useQuery(QUERY_SESSIONS, {
+        variables: {
+            start: currentStart,
+            end: currentEnd,
+        },
+    })
+
     useEffect(() => {
         setCalendarApi(fcRef.current.getApi())
         setCurrentStart(fcRef.current.getApi().view.currentStart)
@@ -109,7 +148,13 @@ const IndexPage = () => {
                     return { ...block, title: block.type.name }
                 })
             )
-    }, [fcRef, queryTimeBlocks])
+        if (querySessions.data)
+            setSessions(
+                querySessions.data.sessions.map((session) => {
+                    return { ...session, title: session.item.name }
+                })
+            )
+    }, [fcRef, queryTimeBlocks, querySessions])
 
     function showTimeBlockSidebar() {
         const calendar = document.getElementById("calendar-wrapper")
@@ -245,13 +290,35 @@ const IndexPage = () => {
     // *
     // *****************************************
     const queryTasks = useQuery(QUERY_TASKS)
+    const [createSessions] = useMutation<
+        CreateSessionsMutation,
+        CreateSessionsMutationVariables
+    >(CREATE_SESSIONS, {
+        onCompleted: () => {
+            toast.success("Sessions created!")
+        },
+        refetchQueries: [
+            {
+                query: QUERY_SESSIONS,
+                variables: {
+                    start: currentStart,
+                    end: currentEnd,
+                },
+            },
+        ],
+        awaitRefetchQueries: true,
+    })
 
     function recalculate() {
         const tasks = queryTasks.data.tasks
             .filter((task: Item) => task.estimatedTime != null)
             .map((task: Item) => {
                 if (task.minBlockTime && !task.maxBlockTime)
-                    task.maxBlockTime = task.estimatedTime
+                    return {
+                        ...task,
+                        maxBlockTime: task.estimatedTime,
+                        timeRemaining: task.estimatedTime,
+                    }
                 return { ...task, timeRemaining: task.estimatedTime }
             })
 
@@ -268,13 +335,14 @@ const IndexPage = () => {
             }
         })
 
-        // start from time now (to nearest quarter)
-        // take sorted tasks to distribute
+        // TODO: start from time now (to nearest quarter)
+        // TODO: delete all planned sessions in current time frame
+        // TODO: take sorted tasks to distribute
 
-        copyTimeBlocks.forEach((block) => {
+        const newSessions = []
+        copyTimeBlocks.map((block) => {
             for (let i = 0; i < tasks.length; i++) {
                 // assuming minBlockTime == estimatedTime if none is given
-                // assuming maxBlockTime == estimatedTime if only minBlockTime given
                 let sessionLength = 0
                 if (tasks[i].timeRemaining > 0 && block.timeRemaining > 0) {
                     if (
@@ -308,17 +376,24 @@ const IndexPage = () => {
                     }
                 }
                 if (sessionLength > 0) {
-                    block.sessions.push({
-                        name: tasks[i].name,
-                        minBlockTime: tasks[i].minBlockTime,
-                        maxBlockTime: tasks[i].maxBlockTime,
-                        sessionLength,
+                    const start = addMinutes(block.start, block.timePlanned)
+                    const end = addMinutes(start, sessionLength)
+                    newSessions.push({
+                        type: "PLANNED" as SessionType,
+                        start,
+                        end,
+                        itemId: tasks[i].id,
                     })
                     block.timePlanned += sessionLength
                     block.timeRemaining -= sessionLength
                     tasks[i].timeRemaining -= sessionLength
                 }
             }
+        })
+        createSessions({
+            variables: {
+                input: newSessions,
+            },
         })
     }
 
@@ -330,10 +405,12 @@ const IndexPage = () => {
                     <div className="flex items-center justify-between mb-10">
                         <h1 className="mb-0">Calendar</h1>
                         <div className="flex gap-4">
-                            <button onClick={recalculate}>
-                                <Icon icon="gravity-ui:arrows-rotate-left" />{" "}
-                                Recalculate
-                            </button>
+                            {timeBlocks.length > 0 ? (
+                                <button onClick={recalculate}>
+                                    <Icon icon="gravity-ui:arrows-rotate-left" />{" "}
+                                    Recalculate
+                                </button>
+                            ) : null}
                             <button onClick={showTimeBlockSidebar}>
                                 <Icon icon="gravity-ui:square-bars-vertical" />{" "}
                                 Time Block
@@ -365,6 +442,11 @@ const IndexPage = () => {
                                     events: timeBlocks,
                                     className: ["event--time-block"],
                                 },
+                                {
+                                    id: "1",
+                                    events: sessions,
+                                    className: ["event--session"],
+                                },
                             ]}
                             eventReceive={eventReceive}
                             eventDrop={eventUpdate}
@@ -377,7 +459,14 @@ const IndexPage = () => {
                     <TimeBlockSidebar />
                 </div>
                 <CustomModal ref={modalRef}>
-                    <button onClick={deleteTimeBlock}>Trash</button>
+                    <Breadcrumb item={modalEvent?.extendedProps.item?.parent} />
+                    <h2 className="mt-2">{modalEvent?.title}</h2>
+                    <button
+                        onClick={deleteTimeBlock}
+                        className="button--circle"
+                    >
+                        <Icon icon="gravity-ui:trash-bin" />
+                    </button>
                 </CustomModal>
             </div>
         </>

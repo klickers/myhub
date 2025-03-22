@@ -44,5 +44,7 @@ export const schema = gql`
         updateSession(id: Int!, input: UpdateSessionInput!): Session!
             @requireAuth
         deleteSession(id: Int!): Session! @requireAuth
+
+        createSessions(input: [CreateSessionInput!]!): [Session!]! @requireAuth
     }
 `

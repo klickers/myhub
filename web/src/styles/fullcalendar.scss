@@ -19,11 +19,28 @@
         }
     }
 
+    .fc-timegrid-event-harness:has(.event--session) {
+        @apply left-0 !important;
+    }
+
     .fc-event {
         @apply rounded-xl py-1 px-2;
 
         &.event--time-block {
-            @apply bg-gray-200 border-gray-200 text-gray-700;
+            @apply bg-gray-200 border-gray-200;
+
+            .fc-event-main {
+                @apply text-gray-500;
+            }
+        }
+
+        &.event--session {
+            @apply ml-4 left-0 bg-gray-300 border border-solid border-gray-500;
+            width: calc(100% - theme("width.4"));
+
+            .fc-event-main {
+                @apply text-gray-800;
+            }
         }
     }
 }
