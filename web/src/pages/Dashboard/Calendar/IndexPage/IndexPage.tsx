@@ -22,6 +22,8 @@ import {
     DeleteTimeBlockMutationVariables,
     CreateSessionsMutation,
     CreateSessionsMutationVariables,
+    DeleteSessionsMutation,
+    DeleteSessionsMutationVariables,
     SessionType,
 } from "types/graphql"
 
@@ -91,6 +93,7 @@ const QUERY_SESSIONS = gql`
             id
             start
             end
+            type
             item {
                 name
                 parent {
@@ -108,6 +111,12 @@ const CREATE_SESSIONS = gql`
         createSessions(input: $input) {
             id
         }
+    }
+`
+
+const DELETE_SESSIONS = gql`
+    mutation DeleteSessionsMutation($ids: [Int!]!) {
+        deleteSessions(ids: $ids)
     }
 `
 
@@ -308,6 +317,10 @@ const IndexPage = () => {
         ],
         awaitRefetchQueries: true,
     })
+    const [deleteSessions] = useMutation<
+        DeleteSessionsMutation,
+        DeleteSessionsMutationVariables
+    >(DELETE_SESSIONS)
 
     function recalculate() {
         const tasks = queryTasks.data.tasks
@@ -336,8 +349,14 @@ const IndexPage = () => {
         })
 
         // TODO: start from time now (to nearest quarter)
-        // TODO: delete all planned sessions in current time frame
-        // TODO: take sorted tasks to distribute
+
+        deleteSessions({
+            variables: {
+                ids: sessions
+                    .filter((s) => s.type == ("PLANNED" as SessionType))
+                    .map((s) => s.id),
+            },
+        })
 
         const newSessions = []
         copyTimeBlocks.map((block) => {

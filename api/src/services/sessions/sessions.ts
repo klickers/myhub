@@ -72,6 +72,19 @@ export const createSessions: MutationResolvers["createSessions"] = ({
     })
 }
 
+export const deleteSessions: MutationResolvers["deleteSessions"] = ({
+    ids,
+}) => {
+    return db.session.deleteMany({
+        where: {
+            id: {
+                in: ids,
+            },
+            userId: context.currentUser.id,
+        },
+    })
+}
+
 export const Session: SessionRelationResolvers = {
     user: (_obj, { root }) => {
         return db.session.findUnique({ where: { id: root?.id } }).user()
