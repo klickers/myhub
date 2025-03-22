@@ -24,6 +24,8 @@ import {
     CreateSessionsMutationVariables,
     DeleteSessionsMutation,
     DeleteSessionsMutationVariables,
+    UpdateSessionMutation,
+    UpdateSessionMutationVariables,
     SessionType,
 } from "types/graphql"
 
@@ -117,6 +119,14 @@ const CREATE_SESSIONS = gql`
 const DELETE_SESSIONS = gql`
     mutation DeleteSessionsMutation($ids: [Int!]!) {
         deleteSessions(ids: $ids)
+    }
+`
+
+const UPDATE_SESSION = gql`
+    mutation UpdateSessionMutation($id: Int!, $input: UpdateSessionInput!) {
+        updateSession(id: $id, input: $input) {
+            id
+        }
     }
 `
 
@@ -236,21 +246,16 @@ const IndexPage = () => {
             toast.success("Time block updated!")
         },
     })
+    const [onSessionUpdate] = useMutation<
+        UpdateSessionMutation,
+        UpdateSessionMutationVariables
+    >(UPDATE_SESSION, {
+        onCompleted: () => {
+            toast.success("Session updated!")
+        },
+    })
     function eventUpdate(eventInfo) {
-        setTimeBlocks(
-            timeBlocks.map((block) => {
-                if (block.id == eventInfo.event.id)
-                    return {
-                        ...block,
-                        start: eventInfo.event.start,
-                        end:
-                            eventInfo.event.end ??
-                            addHours(eventInfo.event.start, 1),
-                    }
-                else return block
-            })
-        )
-        onEventUpdate({
+        const data = {
             variables: {
                 id: parseInt(eventInfo.event.id),
                 input: {
@@ -260,7 +265,28 @@ const IndexPage = () => {
                         addHours(eventInfo.event.start, 1),
                 },
             },
-        })
+        }
+        function arrayMap(items) {
+            return items.map((item) => {
+                if (item.id == eventInfo.event.id)
+                    return {
+                        ...item,
+                        start: eventInfo.event.start,
+                        end:
+                            eventInfo.event.end ??
+                            addHours(eventInfo.event.start, 1),
+                    }
+                else return item
+            })
+        }
+        // only sessions have items
+        if (eventInfo.event.extendedProps.item) {
+            setSessions(arrayMap(sessions))
+            onSessionUpdate(data)
+        } else {
+            setTimeBlocks(arrayMap(timeBlocks))
+            onEventUpdate(data)
+        }
     }
 
     // *****************************************
@@ -299,6 +325,7 @@ const IndexPage = () => {
     // *
     // *****************************************
     const queryTasks = useQuery(QUERY_TASKS)
+
     const [createSessions] = useMutation<
         CreateSessionsMutation,
         CreateSessionsMutationVariables
