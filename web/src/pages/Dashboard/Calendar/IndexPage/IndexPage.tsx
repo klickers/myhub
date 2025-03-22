@@ -127,16 +127,6 @@ const IndexPage = () => {
         onCompleted: () => {
             toast.success("Time block created!")
         },
-        /*refetchQueries: [
-            {
-                query: QUERY_TIME_BLOCKS,
-                variables: {
-                    start: currentStart,
-                    end: currentEnd,
-                },
-            },
-        ],
-        awaitRefetchQueries: true,*/
     })
     async function eventReceive(eventInfo) {
         const res = await onEventReceive({
@@ -150,7 +140,18 @@ const IndexPage = () => {
                 },
             },
         })
-        eventInfo.event.setProp("id", res.data.createTimeBlock.id)
+        eventInfo.event.remove()
+        setTimeBlocks([
+            ...timeBlocks,
+            {
+                id: res.data.createTimeBlock.id,
+                title: eventInfo.event.title,
+                typeId: parseInt(eventInfo.event.extendedProps.typeId),
+                start: eventInfo.event.start,
+                end: eventInfo.event.end ?? addHours(eventInfo.event.start, 1),
+                classNames: ["event--time-block"],
+            },
+        ])
     }
 
     // *******************************************
