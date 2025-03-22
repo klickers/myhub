@@ -505,14 +505,30 @@ const IndexPage = () => {
                     <TimeBlockSidebar />
                 </div>
                 <CustomModal ref={modalRef}>
-                    <Breadcrumb item={modalEvent?.extendedProps.item?.parent} />
-                    <h2 className="mt-2">{modalEvent?.title}</h2>
-                    <button
-                        onClick={deleteTimeBlock}
-                        className="button--circle"
-                    >
-                        <Icon icon="gravity-ui:trash-bin" />
-                    </button>
+                    {modalEvent ? (
+                        <>
+                            {modalEvent.extendedProps.item ? (
+                                <Breadcrumb
+                                    item={modalEvent.extendedProps.item.parent}
+                                />
+                            ) : null}
+                            <h2 className="mt-2">{modalEvent.title}</h2>
+                            {modalEvent.extendedProps.location ? (
+                                <>
+                                    <p className="eyebrow">Location</p>
+                                    <p className="mb-2">
+                                        {modalEvent.extendedProps.location}
+                                    </p>
+                                </>
+                            ) : null}
+                            <button
+                                onClick={deleteTimeBlock}
+                                className="button--circle"
+                            >
+                                <Icon icon="gravity-ui:trash-bin" />
+                            </button>
+                        </>
+                    ) : null}
                 </CustomModal>
             </div>
         </>
