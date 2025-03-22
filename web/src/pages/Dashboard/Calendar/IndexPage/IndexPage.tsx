@@ -516,7 +516,7 @@ const IndexPage = () => {
                             {modalEvent.extendedProps.location ? (
                                 <>
                                     <p className="eyebrow">Location</p>
-                                    <p className="mb-2">
+                                    <p className="mb-6">
                                         {modalEvent.extendedProps.location}
                                     </p>
                                 </>
