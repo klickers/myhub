@@ -17,10 +17,14 @@ import {
     Item,
     UpdateTimeBlockMutation,
     UpdateTimeBlockMutationVariables,
+    DeleteTimeBlockMutation,
+    DeleteTimeBlockMutationVariables,
 } from "types/graphql"
 
 import { Metadata, useMutation, useQuery } from "@redwoodjs/web"
 import { toast } from "@redwoodjs/web/toast"
+
+import CustomModal from "src/components/CustomModal/CustomModal"
 
 import TimeBlockSidebar from "../../../../components/Calendar/TimeBlockSidebar/TimeBlockSidebar"
 
@@ -68,8 +72,17 @@ const UPDATE_TIME_BLOCK = gql`
     }
 `
 
+const DELETE_TIME_BLOCK = gql`
+    mutation DeleteTimeBlockMutation($id: Int!) {
+        deleteTimeBlock(id: $id) {
+            id
+        }
+    }
+`
+
 const IndexPage = () => {
     const fcRef = useRef(null)
+    const modalRef = useRef()
 
     const [calendarApi, setCalendarApi] = useState(null)
     const [currentStart, setCurrentStart] = useState(startOfWeek(new Date()))
@@ -82,6 +95,8 @@ const IndexPage = () => {
             end: currentEnd,
         },
     })
+
+    const [modalEvent, setModalEvent] = useState(null)
 
     useEffect(() => {
         setCalendarApi(fcRef.current.getApi())
@@ -190,6 +205,36 @@ const IndexPage = () => {
                         eventInfo.event.end ??
                         addHours(eventInfo.event.start, 1),
                 },
+            },
+        })
+    }
+
+    // *****************************************
+    // *
+    // * Time block actions
+    // *
+    // *****************************************
+    function eventClick(eventInfo) {
+        eventInfo.jsEvent.preventDefault()
+        modalRef.current.openModal()
+        setModalEvent(eventInfo.event)
+    }
+    // DELETE time block
+    const [onTimeBlockDelete] = useMutation<
+        DeleteTimeBlockMutation,
+        DeleteTimeBlockMutationVariables
+    >(DELETE_TIME_BLOCK, {
+        onCompleted: () => {
+            toast.success("Time block deleted!")
+        },
+    })
+    function deleteTimeBlock() {
+        const id = parseInt(modalEvent.id)
+        setTimeBlocks(timeBlocks.filter((block) => block.id != id))
+        modalRef.current.closeModal()
+        onTimeBlockDelete({
+            variables: {
+                id,
             },
         })
     }
@@ -324,12 +369,16 @@ const IndexPage = () => {
                             eventReceive={eventReceive}
                             eventDrop={eventUpdate}
                             eventResize={eventUpdate}
+                            eventClick={eventClick}
                         />
                     </div>
                 </div>
                 <div id="time-block-sidebar" className="hidden w-1/4 relative">
                     <TimeBlockSidebar />
                 </div>
+                <CustomModal ref={modalRef}>
+                    <button onClick={deleteTimeBlock}>Trash</button>
+                </CustomModal>
             </div>
         </>
     )
