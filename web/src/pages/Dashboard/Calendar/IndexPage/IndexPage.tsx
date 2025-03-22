@@ -75,11 +75,26 @@ const IndexPage = () => {
     const [currentStart, setCurrentStart] = useState(startOfWeek(new Date()))
     const [currentEnd, setCurrentEnd] = useState(endOfWeek(new Date()))
 
+    const [timeBlocks, setTimeBlocks] = useState([])
+    const queryTimeBlocks = useQuery(QUERY_TIME_BLOCKS, {
+        variables: {
+            start: currentStart,
+            end: currentEnd,
+        },
+    })
+
     useEffect(() => {
         setCalendarApi(fcRef.current.getApi())
         setCurrentStart(fcRef.current.getApi().view.currentStart)
         setCurrentEnd(fcRef.current.getApi().view.currentEnd)
-    }, [fcRef])
+
+        if (queryTimeBlocks.data)
+            setTimeBlocks(
+                queryTimeBlocks.data.timeBlocks.map((block) => {
+                    return { ...block, title: block.type.name }
+                })
+            )
+    }, [fcRef, queryTimeBlocks])
 
     function showTimeBlockSidebar() {
         const calendar = document.getElementById("calendar-wrapper")
@@ -98,25 +113,6 @@ const IndexPage = () => {
         setTimeout(() => {
             calendarApi.updateSize()
         }, 200)
-    }
-
-    // *****************************************
-    // *
-    // * Get time block events
-    // *
-    // *****************************************
-    const queryTimeBlocks = useQuery(QUERY_TIME_BLOCKS, {
-        variables: {
-            start: currentStart,
-            end: currentEnd,
-        },
-    })
-    function timeBlocks() {
-        return queryTimeBlocks.data
-            ? queryTimeBlocks.data.timeBlocks.map((block) => {
-                  return { ...block, title: block.type.name }
-              })
-            : []
     }
 
     // *****************************************
@@ -169,18 +165,21 @@ const IndexPage = () => {
         onCompleted: () => {
             toast.success("Time block updated!")
         },
-        refetchQueries: [
-            {
-                query: QUERY_TIME_BLOCKS,
-                variables: {
-                    start: currentStart,
-                    end: currentEnd,
-                },
-            },
-        ],
-        awaitRefetchQueries: true,
     })
     function eventUpdate(eventInfo) {
+        setTimeBlocks(
+            timeBlocks.map((block) => {
+                if (block.id == eventInfo.event.id)
+                    return {
+                        ...block,
+                        start: eventInfo.event.start,
+                        end:
+                            eventInfo.event.end ??
+                            addHours(eventInfo.event.start, 1),
+                    }
+                else return block
+            })
+        )
         onEventUpdate({
             variables: {
                 id: parseInt(eventInfo.event.id),
@@ -210,8 +209,7 @@ const IndexPage = () => {
                 return { ...task, timeRemaining: task.estimatedTime }
             })
 
-        let { timeBlocks } = queryTimeBlocks.data
-        timeBlocks = timeBlocks.map((block) => {
+        const copyTimeBlocks = timeBlocks.map((block) => {
             const timePlanned = 0
             const totalTime = differenceInMinutes(block.end, block.start)
             const timeRemaining = totalTime - timePlanned
@@ -227,7 +225,7 @@ const IndexPage = () => {
         // start from time now (to nearest quarter)
         // take sorted tasks to distribute
 
-        timeBlocks.forEach((block) => {
+        copyTimeBlocks.forEach((block) => {
             for (let i = 0; i < tasks.length; i++) {
                 // assuming minBlockTime == estimatedTime if none is given
                 // assuming maxBlockTime == estimatedTime if only minBlockTime given
@@ -318,7 +316,7 @@ const IndexPage = () => {
                             eventSources={[
                                 {
                                     id: "0",
-                                    events: timeBlocks(),
+                                    events: timeBlocks,
                                     className: ["event--time-block"],
                                 },
                             ]}
