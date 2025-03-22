@@ -312,6 +312,9 @@ const IndexPage = () => {
                                 setCurrentStart(dateInfo.start)
                                 setCurrentEnd(dateInfo.end)
                             }}
+                            contentHeight="300vh"
+                            slotDuration="00:30:00"
+                            expandRows
                             eventSources={[
                                 {
                                     id: "0",
