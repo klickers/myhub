@@ -472,14 +472,14 @@ const IndexPage = () => {
                             allDaySlot={false}
                             dayHeaderContent={renderDayHeaderContent}
                             nowIndicator
-                            snapDuration="00:15:00"
                             droppable
                             editable
+                            contentHeight="300vh"
                             datesSet={(dateInfo) => {
                                 setCurrentStart(dateInfo.start)
                                 setCurrentEnd(dateInfo.end)
                             }}
-                            contentHeight="300vh"
+                            snapDuration="00:05:00"
                             slotDuration="00:30:00"
                             expandRows
                             eventSources={[
