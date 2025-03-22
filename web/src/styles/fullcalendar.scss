@@ -19,8 +19,16 @@
         }
     }
 
-    .fc-timegrid-event-harness:has(.event--session) {
+    .fc-timegrid-event-harness {
         @apply left-0 !important;
+    }
+
+    .fc-timegrid-event-harness:has(.event--session) {
+        @apply z-10 !important;
+    }
+
+    .fc-timegrid-event-harness:not(:has(.event--session)) {
+        @apply z-0 w-full !important;
     }
 
     .fc-event {
