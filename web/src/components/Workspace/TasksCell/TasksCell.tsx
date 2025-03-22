@@ -130,7 +130,18 @@ export const Success = ({
                                 <td>
                                     <Icon icon="gravity-ui:circle" />
                                 </td>
-                                <td>{item.name}</td>
+                                <td>
+                                    <ContentEditable
+                                        html={item.name}
+                                        onChange={(e) =>
+                                            handleInputChange(
+                                                e,
+                                                item.id,
+                                                "name"
+                                            )
+                                        }
+                                    />
+                                </td>
                                 <td className="number">
                                     {Math.round(
                                         (item.estimatedTime / 60) * 100
