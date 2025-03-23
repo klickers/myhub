@@ -301,7 +301,7 @@ const IndexPage = () => {
 
     // *****************************************
     // *
-    // * Time block actions
+    // * Event actions
     // *
     // *****************************************
     function eventClick(eventInfo) {
@@ -309,7 +309,9 @@ const IndexPage = () => {
         modalRef.current.openModal()
         setModalEvent(eventInfo.event)
     }
-    // DELETE time block
+    // *****************************************
+    // * DELETE event
+    // *****************************************
     const [onTimeBlockDelete] = useMutation<
         DeleteTimeBlockMutation,
         DeleteTimeBlockMutationVariables
@@ -326,7 +328,7 @@ const IndexPage = () => {
             toast.success("Session deleted!")
         },
     })
-    function deleteTimeBlock() {
+    function deleteEvent() {
         const id = parseInt(modalEvent.id)
         const data = {
             variables: {
@@ -548,7 +550,7 @@ const IndexPage = () => {
                                 </>
                             ) : null}
                             <button
-                                onClick={deleteTimeBlock}
+                                onClick={deleteEvent}
                                 className="button--circle"
                             >
                                 <Icon icon="gravity-ui:trash-bin" />
