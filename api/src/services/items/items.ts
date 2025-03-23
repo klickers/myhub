@@ -113,6 +113,7 @@ export const tasks: QueryResolvers["tasks"] = ({ parentSlug }) => {
                     nulls: "last",
                 },
             },
+            { estimatedTime: "desc" },
             { name: "asc" },
         ],
         include: {
