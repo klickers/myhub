@@ -556,7 +556,7 @@ const IndexPage = () => {
                             nowIndicator
                             droppable
                             editable
-                            contentHeight="300vh"
+                            contentHeight="500vh"
                             datesSet={(dateInfo) => {
                                 setCurrentStart(dateInfo.start)
                                 setCurrentEnd(dateInfo.end)
