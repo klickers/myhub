@@ -18,6 +18,15 @@ model User {
     timeBlocks     TimeBlock[]
     timeBlockTypes TimeBlockType[]
     sessions       Session[]
+    keyValues      KeyValue[]
+}
+
+model KeyValue {
+    key    String @id
+    value  String
+    userId String
+
+    user User @relation(fields: [userId], references: [clerkId])
 }
 
 enum ItemType {
