@@ -101,6 +101,7 @@ const QUERY_SESSIONS = gql`
             end
             type
             item {
+                id
                 name
                 parent {
                     type
@@ -134,6 +135,7 @@ const CREATE_SESSION = gql`
             end
             type
             item {
+                id
                 name
                 parent {
                     type
@@ -378,17 +380,24 @@ const IndexPage = () => {
         },
     })
     async function copyEvent() {
+        modalRef.current.closeModal()
         const res = await createSession({
             variables: {
                 input: {
                     type: "PLANNED" as SessionType,
                     start: modalEvent.start,
-                    end: modalEvent.start,
+                    end: modalEvent.end,
                     itemId: modalEvent.extendedProps.item.id,
                 },
             },
         })
-        setSessions([...sessions, res.data.createSession])
+        setSessions([
+            ...sessions,
+            {
+                ...res.data.createSession,
+                title: res.data.createSession.item.name,
+            },
+        ])
     }
 
     // *****************************************
