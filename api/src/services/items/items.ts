@@ -154,4 +154,7 @@ export const Item: ItemRelationResolvers = {
     user: (_obj, { root }) => {
         return db.item.findUnique({ where: { id: root?.id } }).user()
     },
+    sessions: (_obj, { root }) => {
+        return db.item.findUnique({ where: { id: root?.id } }).sessions()
+    },
 }

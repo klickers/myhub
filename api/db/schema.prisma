@@ -57,7 +57,7 @@ model Item {
     children Item[]      @relation("ParentChild")
     status   ItemStatus? @relation(fields: [statusId], references: [id])
     user     User        @relation(fields: [userId], references: [clerkId])
-    Session  Session[]
+    sessions Session[]
 
     @@unique([userId, slug])
 }

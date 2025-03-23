@@ -20,6 +20,7 @@ export const schema = gql`
         children: [Item]!
         status: ItemStatus
         user: User!
+        sessions: [Session]!
     }
 
     enum ItemType {
