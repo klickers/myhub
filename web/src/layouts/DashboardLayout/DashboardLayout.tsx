@@ -22,6 +22,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 />
                 <div className="mt-10">
                     <SidebarButton
+                        to={routes.timeTracking()}
+                        icon="gravity-ui:clock"
+                        label="Time Tracking"
+                    />
+                    <SidebarButton
                         to={routes.calendar()}
                         icon="gravity-ui:calendar"
                         label="Calendar"
