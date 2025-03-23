@@ -230,7 +230,7 @@ const IndexPage = () => {
     // * Create time block (eventReceive)
     // *
     // *****************************************
-    const [onEventReceive] = useMutation<
+    const [createTimeBlock] = useMutation<
         CreateTimeBlockMutation,
         CreateTimeBlockMutationVariables
     >(CREATE_TIME_BLOCK, {
@@ -239,7 +239,7 @@ const IndexPage = () => {
         },
     })
     async function eventReceive(eventInfo) {
-        const res = await onEventReceive({
+        const res = await createTimeBlock({
             variables: {
                 input: {
                     start: eventInfo.event.start,
@@ -269,7 +269,7 @@ const IndexPage = () => {
     // * Update time block (eventDrop, eventResize)
     // *
     // *******************************************
-    const [onEventUpdate] = useMutation<
+    const [updateTimeBlock] = useMutation<
         UpdateTimeBlockMutation,
         UpdateTimeBlockMutationVariables
     >(UPDATE_TIME_BLOCK, {
@@ -277,7 +277,7 @@ const IndexPage = () => {
             toast.success("Time block updated!")
         },
     })
-    const [onSessionUpdate] = useMutation<
+    const [updateSession] = useMutation<
         UpdateSessionMutation,
         UpdateSessionMutationVariables
     >(UPDATE_SESSION, {
@@ -313,10 +313,10 @@ const IndexPage = () => {
         // only sessions have items
         if (eventInfo.event.extendedProps.item) {
             setSessions(arrayMap(sessions))
-            onSessionUpdate(data)
+            updateSession(data)
         } else {
             setTimeBlocks(arrayMap(timeBlocks))
-            onEventUpdate(data)
+            updateTimeBlock(data)
         }
     }
 
@@ -333,7 +333,7 @@ const IndexPage = () => {
     // *****************************************
     // * DELETE event
     // *****************************************
-    const [onTimeBlockDelete] = useMutation<
+    const [deleteTimeBlock] = useMutation<
         DeleteTimeBlockMutation,
         DeleteTimeBlockMutationVariables
     >(DELETE_TIME_BLOCK, {
@@ -341,7 +341,7 @@ const IndexPage = () => {
             toast.success("Time block deleted!")
         },
     })
-    const [onSessionDelete] = useMutation<
+    const [deleteSession] = useMutation<
         DeleteSessionMutation,
         DeleteSessionMutationVariables
     >(DELETE_SESSION, {
@@ -359,10 +359,10 @@ const IndexPage = () => {
         // only sessions have items
         if (modalEvent.extendedProps.item) {
             setSessions(sessions.filter((session) => session.id != id))
-            onSessionDelete(data)
+            deleteSession(data)
         } else {
             setTimeBlocks(timeBlocks.filter((block) => block.id != id))
-            onTimeBlockDelete(data)
+            deleteTimeBlock(data)
         }
         modalRef.current.closeModal()
     }
