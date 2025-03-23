@@ -10,6 +10,8 @@ import {
     differenceInMinutes,
     endOfWeek,
     format,
+    isBefore,
+    isEqual,
     startOfWeek,
 } from "date-fns"
 import {
@@ -52,6 +54,10 @@ const QUERY_TASKS = gql`
             minBlockTime
             maxBlockTime
             maxBlockTimePerDay
+            sessions {
+                start
+                end
+            }
         }
     }
 `
@@ -431,41 +437,54 @@ const IndexPage = () => {
     >(DELETE_SESSIONS)
 
     function recalculate() {
-        const tasks = queryTasks.data.tasks
-            .filter((task: Item) => task.estimatedTime != null)
-            .map((task: Item) => {
-                if (task.minBlockTime && !task.maxBlockTime)
-                    return {
-                        ...task,
-                        maxBlockTime: task.estimatedTime,
-                        timeRemaining: task.estimatedTime,
-                    }
-                return { ...task, timeRemaining: task.estimatedTime }
+        const copyTimeBlocks = timeBlocks
+            .filter((block) => isBefore(new Date(), block.start))
+            .map((block) => {
+                const timePlanned = 0
+                const totalTime = differenceInMinutes(block.end, block.start)
+                const timeRemaining = totalTime - timePlanned
+                return {
+                    ...block,
+                    sessions: [],
+                    timePlanned,
+                    timeRemaining,
+                    totalTime,
+                }
             })
-
-        const copyTimeBlocks = timeBlocks.map((block) => {
-            const timePlanned = 0
-            const totalTime = differenceInMinutes(block.end, block.start)
-            const timeRemaining = totalTime - timePlanned
-            return {
-                ...block,
-                sessions: [],
-                timePlanned,
-                timeRemaining,
-                totalTime,
-            }
-        })
-
-        // TODO: start from time now (to nearest quarter)
-        // TODO: change calculations depending on completed sessions
 
         deleteSessions({
             variables: {
                 ids: sessions
-                    .filter((s) => s.type == ("PLANNED" as SessionType))
+                    .filter(
+                        (s) =>
+                            (isBefore(copyTimeBlocks[0].start, s.start) ||
+                                isEqual(copyTimeBlocks[0].start, s.start)) &&
+                            s.type == ("PLANNED" as SessionType)
+                    )
                     .map((s) => s.id),
             },
         })
+
+        const tasks = queryTasks.data.tasks
+            .filter((task: Item) => task.estimatedTime != null)
+            .map((task: Item) => {
+                const data = { ...task, timeRemaining: task.estimatedTime }
+                if (task.minBlockTime && !task.maxBlockTime)
+                    data.maxBlockTime = task.estimatedTime
+                if (task.sessions.length > 0) {
+                    task.sessions
+                        .filter((s) =>
+                            isBefore(s.start, copyTimeBlocks[0].start)
+                        )
+                        .forEach((s) => {
+                            const diff = differenceInMinutes(s.end, s.start)
+                            if (data.timeRemaining > diff)
+                                data.timeRemaining -= diff
+                            else data.timeRemaining = 0
+                        })
+                }
+                return data
+            })
 
         const newSessions = []
         copyTimeBlocks.map((block) => {
