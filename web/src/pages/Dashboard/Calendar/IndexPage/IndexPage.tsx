@@ -401,6 +401,7 @@ const IndexPage = () => {
         })
 
         // TODO: start from time now (to nearest quarter)
+        // TODO: change calculations depending on completed sessions
 
         deleteSessions({
             variables: {
