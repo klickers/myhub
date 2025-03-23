@@ -26,6 +26,8 @@ import {
     DeleteSessionsMutationVariables,
     UpdateSessionMutation,
     UpdateSessionMutationVariables,
+    DeleteSessionMutation,
+    DeleteSessionMutationVariables,
     SessionType,
 } from "types/graphql"
 
@@ -125,6 +127,14 @@ const DELETE_SESSIONS = gql`
 const UPDATE_SESSION = gql`
     mutation UpdateSessionMutation($id: Int!, $input: UpdateSessionInput!) {
         updateSession(id: $id, input: $input) {
+            id
+        }
+    }
+`
+
+const DELETE_SESSION = gql`
+    mutation DeleteSessionMutation($id: Int!) {
+        deleteSession(id: $id) {
             id
         }
     }
@@ -308,15 +318,30 @@ const IndexPage = () => {
             toast.success("Time block deleted!")
         },
     })
+    const [onSessionDelete] = useMutation<
+        DeleteSessionMutation,
+        DeleteSessionMutationVariables
+    >(DELETE_SESSION, {
+        onCompleted: () => {
+            toast.success("Session deleted!")
+        },
+    })
     function deleteTimeBlock() {
         const id = parseInt(modalEvent.id)
-        setTimeBlocks(timeBlocks.filter((block) => block.id != id))
-        modalRef.current.closeModal()
-        onTimeBlockDelete({
+        const data = {
             variables: {
                 id,
             },
-        })
+        }
+        // only sessions have items
+        if (modalEvent.extendedProps.item) {
+            setSessions(sessions.filter((session) => session.id != id))
+            onSessionDelete(data)
+        } else {
+            setTimeBlocks(timeBlocks.filter((block) => block.id != id))
+            onTimeBlockDelete(data)
+        }
+        modalRef.current.closeModal()
     }
 
     // *****************************************
