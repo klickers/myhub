@@ -24,6 +24,8 @@ import {
     CreateSessionsMutationVariables,
     DeleteSessionsMutation,
     DeleteSessionsMutationVariables,
+    CreateSessionMutation,
+    CreateSessionMutationVariables,
     UpdateSessionMutation,
     UpdateSessionMutationVariables,
     DeleteSessionMutation,
@@ -121,6 +123,25 @@ const CREATE_SESSIONS = gql`
 const DELETE_SESSIONS = gql`
     mutation DeleteSessionsMutation($ids: [Int!]!) {
         deleteSessions(ids: $ids)
+    }
+`
+
+const CREATE_SESSION = gql`
+    mutation CreateSessionMutation($input: CreateSessionInput!) {
+        createSession(input: $input) {
+            id
+            start
+            end
+            type
+            item {
+                name
+                parent {
+                    type
+                    name
+                    slug
+                }
+            }
+        }
     }
 `
 
@@ -345,6 +366,30 @@ const IndexPage = () => {
         }
         modalRef.current.closeModal()
     }
+    // *****************************************
+    // * DUPLICATE event
+    // *****************************************
+    const [createSession] = useMutation<
+        CreateSessionMutation,
+        CreateSessionMutationVariables
+    >(CREATE_SESSION, {
+        onCompleted: () => {
+            toast.success("Session created!")
+        },
+    })
+    async function copyEvent() {
+        const res = await createSession({
+            variables: {
+                input: {
+                    type: "PLANNED" as SessionType,
+                    start: modalEvent.start,
+                    end: modalEvent.start,
+                    itemId: modalEvent.extendedProps.item.id,
+                },
+            },
+        })
+        setSessions([...sessions, res.data.createSession])
+    }
 
     // *****************************************
     // *
@@ -549,12 +594,20 @@ const IndexPage = () => {
                                     </p>
                                 </>
                             ) : null}
-                            <button
-                                onClick={deleteEvent}
-                                className="button--circle"
-                            >
-                                <Icon icon="gravity-ui:trash-bin" />
-                            </button>
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={copyEvent}
+                                    className="button--circle"
+                                >
+                                    <Icon icon="gravity-ui:copy" />
+                                </button>
+                                <button
+                                    onClick={deleteEvent}
+                                    className="button--circle"
+                                >
+                                    <Icon icon="gravity-ui:trash-bin" />
+                                </button>
+                            </div>
                         </>
                     ) : null}
                 </CustomModal>
