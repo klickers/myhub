@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 
+import googleCalendarPlugin from "@fullcalendar/google-calendar"
 import interactionPlugin from "@fullcalendar/interaction"
 import FullCalendar from "@fullcalendar/react"
 import timeGridPlugin from "@fullcalendar/timegrid"
@@ -33,6 +34,7 @@ import {
     DeleteSessionMutation,
     DeleteSessionMutationVariables,
     SessionType,
+    GoogleCalendarLink,
 } from "types/graphql"
 
 import { Metadata, useMutation, useQuery } from "@redwoodjs/web"
@@ -42,6 +44,24 @@ import CustomModal from "src/components/CustomModal/CustomModal"
 import Breadcrumb from "src/components/Workspace/Breadcrumb/Breadcrumb"
 
 import TimeBlockSidebar from "../../../../components/Calendar/TimeBlockSidebar/TimeBlockSidebar"
+
+const QUERY_SETTINGS = gql`
+    query CalendarSettingsQuery {
+        settings {
+            name
+            value
+        }
+    }
+`
+
+const QUERY_GOOGLE_CALENDAR_LINKS = gql`
+    query GoogleCalendarLinksQuery {
+        googleCalendarLinks {
+            calendarLink
+            classes
+        }
+    }
+`
 
 const QUERY_TASKS = gql`
     query CalendarTasksQuery {
@@ -177,6 +197,12 @@ const IndexPage = () => {
     const [currentStart, setCurrentStart] = useState(startOfWeek(new Date()))
     const [currentEnd, setCurrentEnd] = useState(endOfWeek(new Date()))
 
+    const [googleCalendarApiKey, setGoogleCalendarApiKey] = useState()
+    const querySettings = useQuery(QUERY_SETTINGS)
+
+    const [eventSources, setEventSources] = useState([])
+    const queryGoogleCalendarLinks = useQuery(QUERY_GOOGLE_CALENDAR_LINKS)
+
     const [timeBlocks, setTimeBlocks] = useState([])
     const queryTimeBlocks = useQuery(QUERY_TIME_BLOCKS, {
         variables: {
@@ -200,19 +226,53 @@ const IndexPage = () => {
         setCurrentStart(fcRef.current.getApi().view.currentStart)
         setCurrentEnd(fcRef.current.getApi().view.currentEnd)
 
-        if (queryTimeBlocks.data)
-            setTimeBlocks(
-                queryTimeBlocks.data.timeBlocks.map((block) => {
-                    return { ...block, title: block.type.name }
-                })
+        if (querySettings.data) {
+            const findSetting = queryTimeBlocks.data.settings.filter(
+                (setting) => setting.name == "googleCalendarApiKey"
             )
-        if (querySessions.data)
-            setSessions(
-                querySessions.data.sessions.map((session) => {
-                    return { ...session, title: session.item.name }
-                })
+            if (findSetting) setGoogleCalendarApiKey(findSetting[0].value)
+        }
+
+        let timeBlocksData, sessionsData
+        if (queryTimeBlocks.data) {
+            timeBlocksData = queryTimeBlocks.data.timeBlocks.map((block) => {
+                return { ...block, title: block.type.name }
+            })
+            setTimeBlocks(timeBlocksData)
+        }
+        if (querySessions.data) {
+            sessionsData = querySessions.data.sessions.map((session) => {
+                return { ...session, title: session.item.name }
+            })
+            setSessions(sessionsData)
+        }
+
+        const eventSourcesData = [
+            {
+                id: "0",
+                events: timeBlocksData,
+                className: ["event--time-block"],
+            },
+            {
+                id: "1",
+                events: sessionsData,
+                className: ["event--session"],
+            },
+        ]
+
+        if (queryGoogleCalendarLinks.data) {
+            queryGoogleCalendarLinks.data.googleCalendarLinks.forEach(
+                (link: GoogleCalendarLink) => {
+                    eventSourcesData.push({
+                        googleCalendarId: link.calendarLink,
+                        className: [link.classes],
+                    })
+                }
             )
-    }, [fcRef, queryTimeBlocks, querySessions])
+        }
+
+        setEventSources(eventSourcesData)
+    }, [fcRef, queryTimeBlocks, querySessions, queryGoogleCalendarLinks])
 
     function showTimeBlockSidebar() {
         const calendar = document.getElementById("calendar-wrapper")
@@ -567,7 +627,11 @@ const IndexPage = () => {
                     <div>
                         <FullCalendar
                             ref={fcRef}
-                            plugins={[timeGridPlugin, interactionPlugin]}
+                            plugins={[
+                                timeGridPlugin,
+                                interactionPlugin,
+                                googleCalendarPlugin,
+                            ]}
                             initialView="timeGridWeek"
                             weekNumbers
                             allDaySlot={false}
@@ -583,18 +647,8 @@ const IndexPage = () => {
                             snapDuration="00:05:00"
                             slotDuration="00:30:00"
                             expandRows
-                            eventSources={[
-                                {
-                                    id: "0",
-                                    events: timeBlocks,
-                                    className: ["event--time-block"],
-                                },
-                                {
-                                    id: "1",
-                                    events: sessions,
-                                    className: ["event--session"],
-                                },
-                            ]}
+                            googleCalendarApiKey={googleCalendarApiKey}
+                            eventSources={eventSources}
                             eventReceive={eventReceive}
                             eventDrop={eventUpdate}
                             eventResize={eventUpdate}

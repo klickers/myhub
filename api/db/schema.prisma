@@ -20,6 +20,7 @@ model User {
     sessions            Session[]
     keyValues           KeyValue[]
     googleCalendarLinks GoogleCalendarLink[]
+    Setting             Setting[]
 }
 
 model KeyValue {
@@ -121,9 +122,23 @@ model Session {
 
 model GoogleCalendarLink {
     id           String  @id @default(uuid())
+    title        String?
     calendarLink String
     classes      String?
     userId       String
 
     user User @relation(fields: [userId], references: [clerkId])
+
+    @@unique([userId, calendarLink])
+}
+
+model Setting {
+    id     String @id @default(uuid())
+    name   String
+    value  String
+    userId String
+
+    user User @relation(fields: [userId], references: [clerkId])
+
+    @@unique([userId, name])
 }

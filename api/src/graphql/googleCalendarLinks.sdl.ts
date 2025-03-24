@@ -1,6 +1,7 @@
 export const schema = gql`
     type GoogleCalendarLink {
         id: String!
+        title: String
         calendarLink: String!
         classes: String
         userId: String!
@@ -13,12 +14,14 @@ export const schema = gql`
     }
 
     input CreateGoogleCalendarLinkInput {
+        title: String
         calendarLink: String!
         classes: String
         userId: String
     }
 
     input UpdateGoogleCalendarLinkInput {
+        title: String
         calendarLink: String
         classes: String
         userId: String
