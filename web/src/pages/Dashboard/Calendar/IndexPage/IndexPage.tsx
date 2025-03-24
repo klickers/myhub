@@ -227,7 +227,7 @@ const IndexPage = () => {
         setCurrentEnd(fcRef.current.getApi().view.currentEnd)
 
         if (querySettings.data) {
-            const findSetting = queryTimeBlocks.data.settings.filter(
+            const findSetting = querySettings.data.settings.filter(
                 (setting) => setting.name == "googleCalendarApiKey"
             )
             if (findSetting) setGoogleCalendarApiKey(findSetting[0].value)
@@ -272,7 +272,13 @@ const IndexPage = () => {
         }
 
         setEventSources(eventSourcesData)
-    }, [fcRef, queryTimeBlocks, querySessions, queryGoogleCalendarLinks])
+    }, [
+        fcRef,
+        queryTimeBlocks,
+        querySessions,
+        queryGoogleCalendarLinks,
+        querySettings,
+    ])
 
     function showTimeBlockSidebar() {
         const calendar = document.getElementById("calendar-wrapper")
