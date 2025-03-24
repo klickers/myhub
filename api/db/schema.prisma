@@ -13,12 +13,13 @@ model User {
     clerkId String @id
     email   String @unique
 
-    items          Item[]
-    itemStatuses   ItemStatus[]
-    timeBlocks     TimeBlock[]
-    timeBlockTypes TimeBlockType[]
-    sessions       Session[]
-    keyValues      KeyValue[]
+    items               Item[]
+    itemStatuses        ItemStatus[]
+    timeBlocks          TimeBlock[]
+    timeBlockTypes      TimeBlockType[]
+    sessions            Session[]
+    keyValues           KeyValue[]
+    googleCalendarLinks GoogleCalendarLink[]
 }
 
 model KeyValue {
@@ -116,4 +117,13 @@ model Session {
 
     user User  @relation(fields: [userId], references: [clerkId])
     item Item? @relation(fields: [itemId], references: [id])
+}
+
+model GoogleCalendarLink {
+    id           String  @id @default(uuid())
+    calendarLink String
+    classes      String?
+    userId       String
+
+    user User @relation(fields: [userId], references: [clerkId])
 }
