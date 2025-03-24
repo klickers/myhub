@@ -56,7 +56,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 </div>
                 <div className="absolute bottom-2">
                     <SidebarButton
-                        to="#!"
+                        to={routes.settings()}
                         icon="gravity-ui:gear"
                         label="Settings"
                     />
