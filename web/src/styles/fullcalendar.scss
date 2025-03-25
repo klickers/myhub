@@ -36,7 +36,7 @@
     }
 
     .fc-event {
-        @apply rounded-xl py-1 px-2;
+        @apply rounded-xl py-1 px-2 overflow-hidden;
 
         &.event--time-block {
             @apply bg-gray-200 border-gray-200;
