@@ -119,6 +119,10 @@ button,
         @apply px-3;
     }
 
+    &.button--plain {
+        @apply p-0 rounded-none bg-transparent text-black border-none font-normal text-left;
+    }
+
     svg {
         @apply w-5 h-5;
     }
@@ -246,6 +250,24 @@ table.tasks {
 
     .number {
         @apply text-right;
+    }
+}
+
+.task__status-dropdown-wrapper {
+    @apply relative;
+
+    .task__status-dropdown {
+        @apply hidden cursor-pointer absolute top-5 right-0 rounded-3xl bg-white shadow-lg p-6 space-y-2 z-10 min-w-40;
+
+        button {
+            &:hover {
+                @apply underline;
+            }
+        }
+    }
+
+    &:hover > .task__status-dropdown {
+        @apply block;
     }
 }
 

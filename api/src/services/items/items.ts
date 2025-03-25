@@ -2,6 +2,7 @@ import type {
     QueryResolvers,
     MutationResolvers,
     ItemRelationResolvers,
+    StatusCode,
 } from "types/graphql"
 import { ItemType } from "types/graphql"
 
@@ -83,7 +84,12 @@ export const project: QueryResolvers["project"] = ({ slug }) => {
     })
 }
 
-export const tasks: QueryResolvers["tasks"] = ({ parentSlug }) => {
+export const tasks: QueryResolvers["tasks"] = ({ parentSlug, statusCodes }) => {
+    const codes = statusCodes
+        ? statusCodes.map((code: StatusCode) => {
+              return { status: { code } }
+          })
+        : []
     return db.item.findMany({
         where: {
             type: "TASK" as ItemType,
@@ -93,6 +99,7 @@ export const tasks: QueryResolvers["tasks"] = ({ parentSlug }) => {
                     slug: parentSlug,
                 },
             }),
+            ...(statusCodes && { OR: [...codes, { status: null }] }),
         },
         orderBy: [
             {
@@ -118,6 +125,7 @@ export const tasks: QueryResolvers["tasks"] = ({ parentSlug }) => {
         ],
         include: {
             parent: true,
+            status: true,
         },
     })
 }

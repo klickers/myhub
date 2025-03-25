@@ -1,10 +1,10 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { Icon } from "@iconify/react/dist/iconify.js"
-import { format } from "date-fns"
 import ContentEditable from "react-contenteditable"
 import type {
     Item,
+    StatusCode,
     TasksQuery,
     TasksQueryVariables,
     UpdateTaskMutation,
@@ -16,12 +16,23 @@ import {
     type CellFailureProps,
     type TypedDocumentNode,
     useMutation,
+    useQuery,
 } from "@redwoodjs/web"
-import { toast, useToaster } from "@redwoodjs/web/toast"
+import { toast } from "@redwoodjs/web/toast"
 
 import CustomDatePicker from "src/components/CustomDatePicker/CustomDatePicker"
 
 import CreateTask from "../CreateTask/CreateTask"
+
+const QUERY_ITEM_STATUSES = gql`
+    query ItemStatusesQuery {
+        itemStatuses {
+            id
+            name
+            code
+        }
+    }
+`
 
 const UPDATE_TASK = gql`
     mutation UpdateTaskMutation($id: String!, $input: UpdateItemInput!) {
@@ -32,8 +43,11 @@ const UPDATE_TASK = gql`
 `
 
 export const QUERY: TypedDocumentNode<TasksQuery, TasksQueryVariables> = gql`
-    query TasksQuery($parentSlug: String!) {
-        tasks(parentSlug: $parentSlug) {
+    query TasksQuery(
+        $parentSlug: String!
+        $statusCodes: [StatusCode] = [OPEN, IN_PROGRESS]
+    ) {
+        tasks(parentSlug: $parentSlug, statusCodes: $statusCodes) {
             id
             name
             estimatedTime
@@ -41,6 +55,9 @@ export const QUERY: TypedDocumentNode<TasksQuery, TasksQueryVariables> = gql`
             maxBlockTime
             softDueDate
             dueDate
+            status {
+                code
+            }
         }
         parent: item(slug: $parentSlug) {
             id
@@ -68,6 +85,14 @@ export const Success = ({
 }: CellSuccessProps<TasksQuery, TasksQueryVariables>) => {
     const [stateTasks, setStateTasks] = useState<Item[]>(tasks as Item[])
     const [inputChangeTimer, setInputChangeTimer] = useState(null)
+
+    const [itemStatuses, setItemStatuses] = useState([])
+    const queryItemStatuses = useQuery(QUERY_ITEM_STATUSES)
+
+    useEffect(() => {
+        if (queryItemStatuses.data)
+            setItemStatuses(queryItemStatuses.data.itemStatuses)
+    }, [queryItemStatuses])
 
     const [update, { loading, error }] = useMutation<
         UpdateTaskMutation,
@@ -105,6 +130,31 @@ export const Success = ({
         )
     }
 
+    const handleStatusChange = (
+        id: string,
+        statusId: number,
+        statusCode: StatusCode
+    ) => {
+        if (statusCode != "OPEN" && statusCode != "IN_PROGRESS")
+            setStateTasks(stateTasks.filter((task) => task.id != id))
+        else
+            setStateTasks(
+                stateTasks.map((task) => {
+                    if (task.id == id)
+                        return { ...task, status: { code: statusCode } }
+                    return task
+                })
+            )
+        update({
+            variables: {
+                id,
+                input: {
+                    statusId,
+                },
+            },
+        })
+    }
+
     return (
         <>
             <h3>Tasks</h3>
@@ -128,8 +178,36 @@ export const Success = ({
                                 key={item.id}
                                 className="border-b border-gray-200"
                             >
-                                <td>
-                                    <Icon icon="gravity-ui:circle" />
+                                <td className="task__status-dropdown-wrapper">
+                                    <div>
+                                        {item.status ? (
+                                            item.status.code ==
+                                            "IN_PROGRESS" ? (
+                                                <Icon icon="gravity-ui:circle-dashed" />
+                                            ) : (
+                                                <Icon icon="gravity-ui:circle" />
+                                            )
+                                        ) : (
+                                            <Icon icon="gravity-ui:circle" />
+                                        )}
+                                    </div>
+                                    <div className="task__status-dropdown">
+                                        {itemStatuses.map((status) => (
+                                            <button
+                                                key={status.id}
+                                                onClick={() =>
+                                                    handleStatusChange(
+                                                        item.id,
+                                                        status.id,
+                                                        status.code
+                                                    )
+                                                }
+                                                className={`button--plain ${(item.status && item.status.code == status.code) || (!item.status && status.code == "OPEN") ? "underline" : ""}`}
+                                            >
+                                                {status.name}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </td>
                                 <td>
                                     <ContentEditable
