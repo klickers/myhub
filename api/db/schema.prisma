@@ -64,16 +64,24 @@ model Item {
     @@unique([userId, slug])
 }
 
+enum StatusCode {
+    OPEN
+    IN_PROGRESS
+    COMPLETED
+    ARCHIVED
+}
+
 model ItemStatus {
-    id     Int    @id @default(autoincrement())
-    status String
+    id     Int        @id @default(autoincrement())
+    name   String
+    code   StatusCode
     userId String
 
     user User @relation(fields: [userId], references: [clerkId])
 
     items Item[]
 
-    @@unique([userId, status])
+    @@unique([userId, name])
 }
 
 model TimeBlock {

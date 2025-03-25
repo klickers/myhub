@@ -1,10 +1,18 @@
 export const schema = gql`
     type ItemStatus {
         id: Int!
-        status: String!
+        name: String!
+        code: StatusCode!
         userId: String!
         user: User!
         items: [Item]!
+    }
+
+    enum StatusCode {
+        OPEN
+        IN_PROGRESS
+        COMPLETED
+        ARCHIVED
     }
 
     type Query {
@@ -13,12 +21,14 @@ export const schema = gql`
     }
 
     input CreateItemStatusInput {
-        status: String!
-        userId: String!
+        name: String!
+        code: StatusCode!
+        userId: String
     }
 
     input UpdateItemStatusInput {
-        status: String
+        name: String
+        code: StatusCode
         userId: String
     }
 

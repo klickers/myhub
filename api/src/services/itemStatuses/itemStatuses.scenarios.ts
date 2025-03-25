@@ -1,18 +1,21 @@
 import type { Prisma, ItemStatus } from "@prisma/client"
+
 import type { ScenarioData } from "@redwoodjs/testing/api"
 
 export const standard = defineScenario<Prisma.ItemStatusCreateArgs>({
     itemStatus: {
         one: {
             data: {
-                status: "String",
-                user: { create: { clerkId: "String", email: "String4172139" } },
+                name: "String",
+                code: "OPEN",
+                user: { create: { clerkId: "String", email: "String3228790" } },
             },
         },
         two: {
             data: {
-                status: "String",
-                user: { create: { clerkId: "String", email: "String5745911" } },
+                name: "String",
+                code: "OPEN",
+                user: { create: { clerkId: "String", email: "String7459284" } },
             },
         },
     },

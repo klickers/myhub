@@ -7,12 +7,12 @@ import type {
 import { db } from "src/lib/db"
 
 export const itemStatuses: QueryResolvers["itemStatuses"] = () => {
-    return db.itemStatus.findMany()
+    return db.itemStatus.findMany({ where: { userId: context.currentUser.id } })
 }
 
 export const itemStatus: QueryResolvers["itemStatus"] = ({ id }) => {
     return db.itemStatus.findUnique({
-        where: { id },
+        where: { id, userId: context.currentUser.id },
     })
 }
 
@@ -20,7 +20,7 @@ export const createItemStatus: MutationResolvers["createItemStatus"] = ({
     input,
 }) => {
     return db.itemStatus.create({
-        data: input,
+        data: { ...input, userId: context.currentUser.id },
     })
 }
 
@@ -30,7 +30,7 @@ export const updateItemStatus: MutationResolvers["updateItemStatus"] = ({
 }) => {
     return db.itemStatus.update({
         data: input,
-        where: { id },
+        where: { id, userId: context.currentUser.id },
     })
 }
 
@@ -38,7 +38,7 @@ export const deleteItemStatus: MutationResolvers["deleteItemStatus"] = ({
     id,
 }) => {
     return db.itemStatus.delete({
-        where: { id },
+        where: { id, userId: context.currentUser.id },
     })
 }
 
