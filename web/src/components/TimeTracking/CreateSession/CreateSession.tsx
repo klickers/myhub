@@ -13,6 +13,7 @@ import {
     Label,
     Submit,
     SubmitHandler,
+    TextAreaField,
     TextField,
     useForm,
 } from "@redwoodjs/forms"
@@ -140,6 +141,10 @@ const CreateSession = ({ query }: Props) => {
                                 onChangeFunction={setEndTime}
                             />
                         </div>
+                    </div>
+                    <div>
+                        <Label name="notes">Notes</Label>
+                        <TextAreaField name="notes" />
                     </div>
                     <Submit disabled={loading}>Add Time Entry</Submit>
                 </Form>

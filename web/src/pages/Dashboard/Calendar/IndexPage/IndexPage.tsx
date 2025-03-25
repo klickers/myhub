@@ -126,6 +126,7 @@ const QUERY_SESSIONS = gql`
             start
             end
             type
+            notes
             item {
                 id
                 name
@@ -706,6 +707,14 @@ const IndexPage = () => {
                                     <p className="eyebrow">Location</p>
                                     <p className="mb-6">
                                         {modalEvent.extendedProps.location}
+                                    </p>
+                                </>
+                            ) : null}
+                            {modalEvent.extendedProps.notes ? (
+                                <>
+                                    <p className="eyebrow">Notes</p>
+                                    <p className="mb-6">
+                                        {modalEvent.extendedProps.notes}
                                     </p>
                                 </>
                             ) : null}
