@@ -64,8 +64,8 @@ const QUERY_GOOGLE_CALENDAR_LINKS = gql`
 `
 
 const QUERY_TASKS = gql`
-    query CalendarTasksQuery {
-        tasks {
+    query CalendarTasksQuery($statusCodes: [StatusCode] = [OPEN, IN_PROGRESS]) {
+        tasks(statusCodes: $statusCodes) {
             id
             name
             softDueDate
