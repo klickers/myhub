@@ -94,11 +94,15 @@ export const tasks: QueryResolvers["tasks"] = ({ parentSlug, statusCodes }) => {
         where: {
             type: "TASK" as ItemType,
             userId: context.currentUser.id,
-            ...(parentSlug && {
-                parent: {
-                    slug: parentSlug,
-                },
-            }),
+            ...(parentSlug && parentSlug != ""
+                ? {
+                      parent: {
+                          slug: parentSlug,
+                      },
+                  }
+                : {
+                      NOT: { dueDate: null },
+                  }),
             ...(statusCodes && { OR: [...codes, { status: null }] }),
         },
         orderBy: [

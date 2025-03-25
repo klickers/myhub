@@ -1,5 +1,6 @@
-// import { Link, routes } from '@redwoodjs/router'
 import { Metadata } from "@redwoodjs/web"
+
+import TasksCell from "src/components/Workspace/TasksCell"
 
 const IndexPage = () => {
     return (
@@ -9,8 +10,7 @@ const IndexPage = () => {
                 description="Dashboard Workspace"
             />
 
-            <h2>Dashboard Workspace</h2>
-            <p>Cooking goodies to go here!</p>
+            <TasksCell parentSlug="" />
         </>
     )
 }
