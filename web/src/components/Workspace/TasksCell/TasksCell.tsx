@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 
 import { Icon } from "@iconify/react/dist/iconify.js"
+import { differenceInMinutes } from "date-fns"
 import ContentEditable from "react-contenteditable"
 import type {
     Item,
@@ -57,6 +58,11 @@ export const QUERY: TypedDocumentNode<TasksQuery, TasksQueryVariables> = gql`
             dueDate
             status {
                 code
+            }
+            sessions {
+                start
+                end
+                type
             }
         }
         parent: item(slug: $parentSlug) {
@@ -164,7 +170,7 @@ export const Success = ({
                         <tr>
                             <th></th>
                             <th></th>
-                            <th></th>
+                            <th>Planned</th>
                             <th className="number">Est. Time</th>
                             <th className="number">Min Block</th>
                             <th className="number">Max Block</th>
@@ -173,135 +179,162 @@ export const Success = ({
                         </tr>
                     </thead>
                     <tbody>
-                        {stateTasks.map((item) => (
-                            <tr
-                                key={item.id}
-                                className="border-b border-gray-200"
-                            >
-                                <td className="task__status-dropdown-wrapper">
-                                    <div>
-                                        {item.status ? (
-                                            item.status.code ==
-                                            "IN_PROGRESS" ? (
-                                                <Icon icon="gravity-ui:circle-dashed" />
+                        {stateTasks.map((item) => {
+                            const timePlanned =
+                                item.sessions.length > 0
+                                    ? item.sessions.reduce(
+                                          (acc, val) =>
+                                              acc +
+                                              differenceInMinutes(
+                                                  val.end,
+                                                  val.start
+                                              ),
+                                          0
+                                      )
+                                    : 0
+                            const percentPlanned = item.estimatedTime
+                                ? Math.round(
+                                      (timePlanned / item.estimatedTime) * 100
+                                  )
+                                : 0
+
+                            let percentColor = "text-black"
+                            if (percentPlanned == 100)
+                                percentColor = "text-green-700"
+                            else if (percentPlanned < 100) {
+                                if (percentPlanned > 50)
+                                    percentColor = "text-yellow-700"
+                                else if (percentPlanned > 0)
+                                    percentColor = "text-amber-700"
+                                else percentColor = "text-red-700"
+                            }
+
+                            return (
+                                <tr
+                                    key={item.id}
+                                    className="border-b border-gray-200 relative"
+                                >
+                                    <td className="task__status-dropdown-wrapper">
+                                        <div>
+                                            {item.status ? (
+                                                item.status.code ==
+                                                "IN_PROGRESS" ? (
+                                                    <Icon icon="gravity-ui:circle-dashed" />
+                                                ) : (
+                                                    <Icon icon="gravity-ui:circle" />
+                                                )
                                             ) : (
                                                 <Icon icon="gravity-ui:circle" />
-                                            )
-                                        ) : (
-                                            <Icon icon="gravity-ui:circle" />
-                                        )}
-                                    </div>
-                                    <div className="task__status-dropdown">
-                                        {itemStatuses.map((status) => (
-                                            <button
-                                                key={status.id}
-                                                onClick={() =>
-                                                    handleStatusChange(
-                                                        item.id,
-                                                        status.id,
-                                                        status.code
-                                                    )
-                                                }
-                                                className={`button--plain ${(item.status && item.status.code == status.code) || (!item.status && status.code == "OPEN") ? "underline" : ""}`}
-                                            >
-                                                {status.name}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </td>
-                                <td>
-                                    <ContentEditable
-                                        html={item.name}
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                e,
-                                                item.id,
-                                                "name"
-                                            )
-                                        }
-                                    />
-                                </td>
-                                <td className="number">
-                                    {item.estimatedTime
-                                        ? Math.round(
-                                              (item.estimatedTime / 60) * 100
-                                          ) / 100
-                                        : 0}
-                                </td>
-                                <td className="number">
-                                    <ContentEditable
-                                        html={
-                                            item.estimatedTime
-                                                ? item.estimatedTime.toString()
-                                                : ""
-                                        }
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                e,
-                                                item.id,
-                                                "estimatedTime"
-                                            )
-                                        }
-                                    />
-                                </td>
-                                <td className="number">
-                                    <ContentEditable
-                                        html={
-                                            item.minBlockTime
-                                                ? item.minBlockTime.toString()
-                                                : ""
-                                        }
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                e,
-                                                item.id,
-                                                "minBlockTime"
-                                            )
-                                        }
-                                    />
-                                </td>
-                                <td className="number">
-                                    <ContentEditable
-                                        html={
-                                            item.maxBlockTime
-                                                ? item.maxBlockTime.toString()
-                                                : ""
-                                        }
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                e,
-                                                item.id,
-                                                "maxBlockTime"
-                                            )
-                                        }
-                                    />
-                                </td>
-                                <td className="number">
-                                    <CustomDatePicker
-                                        selectedDate={item.softDueDate}
-                                        onChangeFunction={(e) =>
-                                            handleInputChange(
-                                                e,
-                                                item.id,
-                                                "softDueDate"
-                                            )
-                                        }
-                                    />
-                                </td>
-                                <td className="number">
-                                    <CustomDatePicker
-                                        selectedDate={item.dueDate}
-                                        onChangeFunction={(e) =>
-                                            handleInputChange(
-                                                e,
-                                                item.id,
-                                                "dueDate"
-                                            )
-                                        }
-                                    />
-                                </td>
-                            </tr>
-                        ))}
+                                            )}
+                                        </div>
+                                        <div className="task__status-dropdown">
+                                            {itemStatuses.map((status) => (
+                                                <button
+                                                    key={status.id}
+                                                    onClick={() =>
+                                                        handleStatusChange(
+                                                            item.id,
+                                                            status.id,
+                                                            status.code
+                                                        )
+                                                    }
+                                                    className={`button--plain ${(item.status && item.status.code == status.code) || (!item.status && status.code == "OPEN") ? "underline" : ""}`}
+                                                >
+                                                    {status.name}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <ContentEditable
+                                            html={item.name}
+                                            onChange={(e) =>
+                                                handleInputChange(
+                                                    e,
+                                                    item.id,
+                                                    "name"
+                                                )
+                                            }
+                                        />
+                                    </td>
+                                    <td className={`number ${percentColor}`}>
+                                        {percentPlanned}%
+                                    </td>
+                                    <td className="number">
+                                        <ContentEditable
+                                            html={
+                                                item.estimatedTime
+                                                    ? item.estimatedTime.toString()
+                                                    : ""
+                                            }
+                                            onChange={(e) =>
+                                                handleInputChange(
+                                                    e,
+                                                    item.id,
+                                                    "estimatedTime"
+                                                )
+                                            }
+                                        />
+                                    </td>
+                                    <td className="number">
+                                        <ContentEditable
+                                            html={
+                                                item.minBlockTime
+                                                    ? item.minBlockTime.toString()
+                                                    : ""
+                                            }
+                                            onChange={(e) =>
+                                                handleInputChange(
+                                                    e,
+                                                    item.id,
+                                                    "minBlockTime"
+                                                )
+                                            }
+                                        />
+                                    </td>
+                                    <td className="number">
+                                        <ContentEditable
+                                            html={
+                                                item.maxBlockTime
+                                                    ? item.maxBlockTime.toString()
+                                                    : ""
+                                            }
+                                            onChange={(e) =>
+                                                handleInputChange(
+                                                    e,
+                                                    item.id,
+                                                    "maxBlockTime"
+                                                )
+                                            }
+                                        />
+                                    </td>
+                                    <td className="number">
+                                        <CustomDatePicker
+                                            selectedDate={item.softDueDate}
+                                            onChangeFunction={(e) =>
+                                                handleInputChange(
+                                                    e,
+                                                    item.id,
+                                                    "softDueDate"
+                                                )
+                                            }
+                                        />
+                                    </td>
+                                    <td className="number">
+                                        <CustomDatePicker
+                                            selectedDate={item.dueDate}
+                                            onChangeFunction={(e) =>
+                                                handleInputChange(
+                                                    e,
+                                                    item.id,
+                                                    "dueDate"
+                                                )
+                                            }
+                                        />
+                                    </td>
+                                </tr>
+                            )
+                        })}
                     </tbody>
                 </table>
             ) : null}
