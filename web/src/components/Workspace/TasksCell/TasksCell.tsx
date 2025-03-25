@@ -99,7 +99,7 @@ export const Success = ({
         UpdateTaskMutationVariables
     >(UPDATE_TASK, {
         onCompleted: () => {
-            toast.success("Value updated!")
+            toast.success("Task updated!")
         },
         refetchQueries: [{ query: QUERY, variables: { parentSlug } }],
         awaitRefetchQueries: true,
