@@ -40,7 +40,8 @@ form {
     @apply flex flex-col gap-3;
 
     input,
-    textarea {
+    textarea,
+    select {
         @apply border border-gray-300 w-full py-3 px-4 outline-none;
         &:focus {
             @apply border-black;
@@ -50,7 +51,8 @@ form {
         }
     }
 
-    input {
+    input,
+    select {
         @apply rounded-full;
     }
 
