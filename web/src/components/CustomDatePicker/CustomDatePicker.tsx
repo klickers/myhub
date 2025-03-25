@@ -5,6 +5,8 @@ import DatePicker from "react-datepicker"
 interface Props {
     selectedDate: Date
     onChangeFunction: React.Dispatch<any>
+    showTimeSelect?: boolean
+    required?: boolean
 }
 
 const CustomDatePicker = (props: Props) => {
@@ -81,6 +83,11 @@ const CustomDatePicker = (props: Props) => {
             )}
             selected={props.selectedDate}
             onChange={(date: Date) => props.onChangeFunction(date)}
+            showTimeSelect={props.showTimeSelect}
+            required={props.required}
+            dateFormat={
+                props.showTimeSelect ? "MM/dd/yyyy h:mm aa" : "MM/dd/yyyy"
+            }
         />
     )
 }

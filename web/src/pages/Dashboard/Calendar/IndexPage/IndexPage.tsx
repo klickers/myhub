@@ -659,6 +659,7 @@ const IndexPage = () => {
                             eventDrop={eventUpdate}
                             eventResize={eventUpdate}
                             eventClick={eventClick}
+                            eventContent={renderEventContent}
                         />
                     </div>
                 </div>
@@ -709,6 +710,26 @@ function renderDayHeaderContent(eventInfo) {
         <div className="flex gap-2 justify-between w-full">
             <span>{format(eventInfo.date, "EEE")}</span>
             <span>{format(eventInfo.date, "MMM dd")}</span>
+        </div>
+    )
+}
+
+function renderEventContent(eventInfo) {
+    console.log(eventInfo)
+    return (
+        <div
+            className={
+                eventInfo.event.extendedProps.type &&
+                eventInfo.event.extendedProps.type == "TRACKED"
+                    ? "session--tracked"
+                    : ""
+            }
+        >
+            <p className="text-xs mb-1">
+                {format(eventInfo.event.start, "h:mm")} -{" "}
+                {format(eventInfo.event.end, "h:mm")}
+            </p>
+            <p>{eventInfo.event.title}</p>
         </div>
     )
 }

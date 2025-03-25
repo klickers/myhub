@@ -160,14 +160,15 @@ button,
     }
 }
 
+.react-datepicker__aria-live {
+    @apply hidden;
+}
 .react-datepicker__tab-loop {
-    .react-datepicker__aria-live {
-        @apply hidden;
+    .react-datepicker {
+        @apply rounded-3xl bg-white shadow-lg p-4 flex gap-2;
     }
 
     .react-datepicker__month-container {
-        @apply rounded-3xl bg-white shadow-lg p-4;
-
         .react-datepicker__header {
             button {
                 @apply p-0.5;
@@ -204,6 +205,14 @@ button,
                     }
                 }
             }
+        }
+    }
+
+    .react-datepicker__time-container {
+        @apply pr-2 text-sm overflow-y-scroll max-h-64 pb-2;
+
+        .react-datepicker__time-list {
+            @apply space-y-1;
         }
     }
 

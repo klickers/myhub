@@ -52,6 +52,14 @@
             .fc-event-main {
                 @apply text-gray-800;
             }
+
+            &:has(.session--tracked) {
+                @apply bg-gray-100 border-gray-400;
+
+                .fc-event-main {
+                    @apply text-gray-600;
+                }
+            }
         }
     }
 }
