@@ -758,7 +758,6 @@ function renderDayHeaderContent(eventInfo) {
 }
 
 function renderEventContent(eventInfo) {
-    console.log(eventInfo)
     return (
         <div
             className={
