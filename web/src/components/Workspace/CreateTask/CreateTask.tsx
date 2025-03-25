@@ -86,6 +86,7 @@ const CreateTask = ({ parentId, tasks, setTasks }: Props) => {
                 ...data,
                 softDueDate,
                 dueDate,
+                sessions: [],
             } as Item,
         ])
         modalRef.current.closeModal()
