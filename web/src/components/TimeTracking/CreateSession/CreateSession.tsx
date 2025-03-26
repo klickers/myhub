@@ -79,10 +79,11 @@ const CreateSession = ({ query }: Props) => {
         awaitRefetchQueries: true,
     })
 
-    const onSubmit: SubmitHandler<FormValues> = () => {
+    const onSubmit: SubmitHandler<FormValues> = (data) => {
         create({
             variables: {
                 input: {
+                    ...data,
                     type: "TRACKED",
                     start: startTime,
                     end: endTime,
