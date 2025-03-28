@@ -550,9 +550,8 @@ const IndexPage = () => {
                 ids: sessions
                     .filter(
                         (s) =>
-                            (isBefore(copyTimeBlocks[0].start, s.start) ||
-                                isEqual(copyTimeBlocks[0].start, s.start)) &&
-                            s.type == ("PLANNED" as SessionType)
+                            isBefore(copyTimeBlocks[0].start, s.start) ||
+                            isEqual(copyTimeBlocks[0].start, s.start)
                     )
                     .map((s) => s.id),
             },
