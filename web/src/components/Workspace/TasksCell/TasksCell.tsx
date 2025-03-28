@@ -114,7 +114,9 @@ export const Success = ({
     const handleInputChange = (e, id: string, propName: string) => {
         const propValue = propName.includes("Time")
             ? parseInt(e.target.value)
-            : e.target.value
+            : propName.includes("Date")
+              ? e
+              : e.target.value
         setStateTasks(
             stateTasks.map((task) => {
                 if (task.id == id) return { ...task, [propName]: propValue }
