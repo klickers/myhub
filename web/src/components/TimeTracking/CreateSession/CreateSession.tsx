@@ -14,7 +14,6 @@ import {
     Submit,
     SubmitHandler,
     TextAreaField,
-    TextField,
     useForm,
 } from "@redwoodjs/forms"
 import { useMutation, useQuery } from "@redwoodjs/web"
@@ -22,6 +21,7 @@ import { toast } from "@redwoodjs/web/toast"
 
 import CustomDatePicker from "src/components/CustomDatePicker/CustomDatePicker"
 import CustomModal from "src/components/CustomModal/CustomModal"
+import { QUERY_ACTIVE_ITEMS } from "src/graphql/queries/getActiveItems.query"
 
 interface Props {
     query: InternalRefetchQueryDescriptor
@@ -30,19 +30,6 @@ interface Props {
 interface FormValues {
     name: string
 }
-
-const QUERY_ITEMS = gql`
-    query ItemsForCreateTimeEntryQuery {
-        activeItems {
-            id
-            name
-            type
-            status {
-                name
-            }
-        }
-    }
-`
 
 const CREATE_TIME_ENTRY = gql`
     mutation CreateTimeEntryMutation($input: CreateSessionInput!) {
@@ -60,7 +47,7 @@ const CreateSession = ({ query }: Props) => {
     const [endTime, setEndTime] = useState(null)
 
     const [items, setItems] = useState([])
-    const queryItems = useQuery(QUERY_ITEMS)
+    const queryItems = useQuery(QUERY_ACTIVE_ITEMS)
 
     useEffect(() => {
         if (queryItems.data) setItems(queryItems.data.activeItems)
