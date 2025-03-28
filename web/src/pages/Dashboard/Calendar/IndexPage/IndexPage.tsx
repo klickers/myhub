@@ -721,6 +721,12 @@ const IndexPage = () => {
                             <div className="flex justify-between w-full">
                                 <div className="flex gap-3">
                                     <button
+                                        onClick={trackEvent}
+                                        className="button--circle"
+                                    >
+                                        <Icon icon="gravity-ui:circle-check" />
+                                    </button>
+                                    <button
                                         onClick={copyEvent}
                                         className="button--circle"
                                     >
@@ -733,12 +739,6 @@ const IndexPage = () => {
                                         <Icon icon="gravity-ui:trash-bin" />
                                     </button>
                                 </div>
-                                <button
-                                    onClick={trackEvent}
-                                    className="button--circle"
-                                >
-                                    <Icon icon="gravity-ui:circle-check" />
-                                </button>
                             </div>
                         </>
                     ) : null}
