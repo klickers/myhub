@@ -66,10 +66,10 @@ const CreateItemStatus = ({ query }: Props) => {
     return (
         <>
             <button onClick={() => modalRef.current.openModal()}>
-                <Icon icon="gravity-ui:circle-plus" /> Add Link
+                <Icon icon="gravity-ui:circle-plus" /> Add Status
             </button>
             <CustomModal ref={modalRef}>
-                <h2>Create Google Calendar Link</h2>
+                <h2>Create Item Status</h2>
                 <Form
                     onSubmit={onSubmit}
                     error={error}
