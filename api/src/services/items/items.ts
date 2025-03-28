@@ -12,6 +12,22 @@ export const items: QueryResolvers["items"] = () => {
     return db.item.findMany({ where: { userId: context.currentUser.id } })
 }
 
+export const activeItems: QueryResolvers["activeItems"] = () => {
+    return db.item.findMany({
+        where: {
+            userId: context.currentUser.id,
+            OR: [
+                { status: null },
+                { status: { code: "OPEN" } },
+                { status: { code: "IN_PROGRESS" } },
+            ],
+        },
+        orderBy: {
+            type: "asc",
+        },
+    })
+}
+
 export const item: QueryResolvers["item"] = ({ id, slug }) => {
     return db.item.findFirst({
         where: {

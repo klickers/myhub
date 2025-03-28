@@ -33,7 +33,7 @@ interface FormValues {
 
 const QUERY_ITEMS = gql`
     query ItemsForCreateTimeEntryQuery {
-        items {
+        activeItems {
             id
             name
             type
@@ -63,7 +63,7 @@ const CreateSession = ({ query }: Props) => {
     const queryItems = useQuery(QUERY_ITEMS)
 
     useEffect(() => {
-        if (queryItems.data) setItems(queryItems.data.items)
+        if (queryItems.data) setItems(queryItems.data.activeItems)
     }, [queryItems])
 
     const formMethods = useForm()

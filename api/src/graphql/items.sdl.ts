@@ -31,6 +31,7 @@ export const schema = gql`
 
     type Query {
         items: [Item!]! @requireAuth
+        activeItems: [Item!]! @requireAuth
         item(id: String, slug: String): Item @requireAuth
 
         folders: [Item!]! @requireAuth
