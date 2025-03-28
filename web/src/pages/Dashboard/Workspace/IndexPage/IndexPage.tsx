@@ -10,7 +10,7 @@ const IndexPage = () => {
                 description="Dashboard Workspace"
             />
 
-            <TasksCell parentSlug="" />
+            <TasksCell parentSlug="" includeParent={true} />
         </>
     )
 }

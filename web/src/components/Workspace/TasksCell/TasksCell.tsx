@@ -12,6 +12,7 @@ import type {
     UpdateTaskMutationVariables,
 } from "types/graphql"
 
+import { Link } from "@redwoodjs/router"
 import {
     type CellSuccessProps,
     type CellFailureProps,
@@ -23,6 +24,7 @@ import { toast } from "@redwoodjs/web/toast"
 
 import CustomDatePicker from "src/components/CustomDatePicker/CustomDatePicker"
 
+import Breadcrumb from "../Breadcrumb/Breadcrumb"
 import CreateTask from "../CreateTask/CreateTask"
 
 const QUERY_ITEM_STATUSES = gql`
@@ -47,6 +49,7 @@ export const QUERY: TypedDocumentNode<TasksQuery, TasksQueryVariables> = gql`
     query TasksQuery(
         $parentSlug: String!
         $statusCodes: [StatusCode] = [OPEN, IN_PROGRESS]
+        $includeParent: Boolean = false
     ) {
         tasks(parentSlug: $parentSlug, statusCodes: $statusCodes) {
             id
@@ -63,6 +66,11 @@ export const QUERY: TypedDocumentNode<TasksQuery, TasksQueryVariables> = gql`
                 start
                 end
                 type
+            }
+            parent @include(if: $includeParent) {
+                name
+                type
+                slug
             }
         }
         parent: item(slug: $parentSlug) {
@@ -248,6 +256,13 @@ export const Success = ({
                                         </div>
                                     </td>
                                     <td className="min-w-64">
+                                        {item.parent ? (
+                                            <div className="text-gray-500">
+                                                <Breadcrumb
+                                                    item={item.parent}
+                                                />
+                                            </div>
+                                        ) : null}
                                         <ContentEditable
                                             html={item.name}
                                             onChange={(e) =>
