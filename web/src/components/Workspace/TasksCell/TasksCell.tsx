@@ -208,7 +208,7 @@ export const Success = ({
                                   )
                                 : 0
 
-                            let percentColor = "text-black"
+                            let percentColor = "text-green-950"
                             if (percentPlanned == 100)
                                 percentColor = "text-green-700"
                             else if (percentPlanned < 100) {
