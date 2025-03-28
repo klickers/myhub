@@ -204,7 +204,8 @@ button,
                         @apply text-gray-400;
                     }
 
-                    &.react-datepicker__day--selected {
+                    &.react-datepicker__day--selected,
+                    &.react-datepicker__day--today {
                         @apply bg-gray-200;
                     }
                 }
