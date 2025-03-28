@@ -267,7 +267,6 @@ const IndexPage = () => {
                 className: ["event--time-block"],
             },
         ])
-        console.log(fcRef.current.props.eventSources)
     }, [queryTimeBlocks])
 
     useEffect(() => {
