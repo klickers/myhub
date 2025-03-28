@@ -247,7 +247,7 @@ export const Success = ({
                                             ))}
                                         </div>
                                     </td>
-                                    <td>
+                                    <td className="min-w-64">
                                         <ContentEditable
                                             html={item.name}
                                             onChange={(e) =>
