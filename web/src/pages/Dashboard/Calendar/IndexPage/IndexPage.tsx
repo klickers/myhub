@@ -89,6 +89,7 @@ const QUERY_TIME_BLOCKS = gql`
             start
             end
             type {
+                id
                 name
             }
         }
@@ -204,7 +205,6 @@ const IndexPage = () => {
     const [eventSources, setEventSources] = useState([])
     const queryGoogleCalendarLinks = useQuery(QUERY_GOOGLE_CALENDAR_LINKS)
 
-    const [timeBlocks, setTimeBlocks] = useState([])
     const queryTimeBlocks = useQuery(QUERY_TIME_BLOCKS, {
         variables: {
             start: currentStart,
@@ -214,7 +214,6 @@ const IndexPage = () => {
 
     const [modalEvent, setModalEvent] = useState(null)
 
-    const [sessions, setSessions] = useState([])
     const querySessions = useQuery(QUERY_SESSIONS, {
         variables: {
             start: currentStart,
@@ -226,60 +225,66 @@ const IndexPage = () => {
         setCalendarApi(fcRef.current.getApi())
         setCurrentStart(fcRef.current.getApi().view.currentStart)
         setCurrentEnd(fcRef.current.getApi().view.currentEnd)
+    }, [])
 
+    useEffect(() => {
         if (querySettings.data) {
             const findSetting = querySettings.data.settings.filter(
                 (setting) => setting.name == "googleCalendarApiKey"
             )
             if (findSetting) setGoogleCalendarApiKey(findSetting[0].value)
         }
+    }, [querySettings])
 
-        let timeBlocksData, sessionsData
-        if (queryTimeBlocks.data) {
-            timeBlocksData = queryTimeBlocks.data.timeBlocks.map((block) => {
-                return { ...block, title: block.type.name }
-            })
-            setTimeBlocks(timeBlocksData)
+    useEffect(() => {
+        if (queryGoogleCalendarLinks.data) {
+            setEventSources((prevData) => [
+                ...prevData.filter((source) => source.id),
+                ...queryGoogleCalendarLinks.data.googleCalendarLinks.map(
+                    (link: GoogleCalendarLink) => {
+                        return {
+                            googleCalendarId: link.calendarLink,
+                            className: [link.classes],
+                        }
+                    }
+                ),
+            ])
         }
-        if (querySessions.data) {
-            sessionsData = querySessions.data.sessions.map((session) => {
-                return { ...session, title: session.item.name }
-            })
-            setSessions(sessionsData)
-        }
+    }, [queryGoogleCalendarLinks])
 
-        const eventSourcesData = [
+    useEffect(() => {
+        setEventSources((prevData) => [
+            ...prevData.filter((source) => source.id != "0"),
             {
                 id: "0",
-                events: timeBlocksData,
+                events:
+                    queryTimeBlocks.data &&
+                    queryTimeBlocks.data.timeBlocks.length > 0
+                        ? queryTimeBlocks.data.timeBlocks.map((block) => {
+                              return { ...block, title: block.type.name }
+                          })
+                        : [],
                 className: ["event--time-block"],
             },
+        ])
+        console.log(fcRef.current.props.eventSources)
+    }, [queryTimeBlocks])
+
+    useEffect(() => {
+        setEventSources((prevData) => [
+            ...prevData.filter((source) => source.id != "1"),
             {
                 id: "1",
-                events: sessionsData,
+                events:
+                    querySessions.data && querySessions.data.sessions.length > 0
+                        ? querySessions.data.sessions.map((session) => {
+                              return { ...session, title: session.item.name }
+                          })
+                        : [],
                 className: ["event--session"],
             },
-        ]
-
-        if (queryGoogleCalendarLinks.data) {
-            queryGoogleCalendarLinks.data.googleCalendarLinks.forEach(
-                (link: GoogleCalendarLink) => {
-                    eventSourcesData.push({
-                        googleCalendarId: link.calendarLink,
-                        className: [link.classes],
-                    })
-                }
-            )
-        }
-
-        setEventSources(eventSourcesData)
-    }, [
-        fcRef,
-        queryTimeBlocks,
-        querySessions,
-        queryGoogleCalendarLinks,
-        querySettings,
-    ])
+        ])
+    }, [querySessions])
 
     function showTimeBlockSidebar() {
         const calendar = document.getElementById("calendar-wrapper")
@@ -310,11 +315,12 @@ const IndexPage = () => {
         CreateTimeBlockMutationVariables
     >(CREATE_TIME_BLOCK, {
         onCompleted: () => {
+            queryTimeBlocks.refetch()
             toast.success("Time block created!")
         },
     })
-    async function eventReceive(eventInfo) {
-        const res = await createTimeBlock({
+    function eventReceive(eventInfo) {
+        createTimeBlock({
             variables: {
                 input: {
                     start: eventInfo.event.start,
@@ -326,17 +332,6 @@ const IndexPage = () => {
             },
         })
         eventInfo.event.remove()
-        setTimeBlocks([
-            ...timeBlocks,
-            {
-                id: res.data.createTimeBlock.id,
-                title: eventInfo.event.title,
-                typeId: parseInt(eventInfo.event.extendedProps.typeId),
-                start: eventInfo.event.start,
-                end: eventInfo.event.end ?? addHours(eventInfo.event.start, 1),
-                classNames: ["event--time-block"],
-            },
-        ])
     }
 
     // *******************************************
@@ -349,6 +344,7 @@ const IndexPage = () => {
         UpdateTimeBlockMutationVariables
     >(UPDATE_TIME_BLOCK, {
         onCompleted: () => {
+            queryTimeBlocks.refetch()
             toast.success("Time block updated!")
         },
     })
@@ -357,6 +353,7 @@ const IndexPage = () => {
         UpdateSessionMutationVariables
     >(UPDATE_SESSION, {
         onCompleted: () => {
+            querySessions.refetch()
             toast.success("Session updated!")
         },
     })
@@ -372,27 +369,9 @@ const IndexPage = () => {
                 },
             },
         }
-        function arrayMap(items) {
-            return items.map((item) => {
-                if (item.id == eventInfo.event.id)
-                    return {
-                        ...item,
-                        start: eventInfo.event.start,
-                        end:
-                            eventInfo.event.end ??
-                            addHours(eventInfo.event.start, 1),
-                    }
-                else return item
-            })
-        }
         // only sessions have items
-        if (eventInfo.event.extendedProps.item) {
-            setSessions(arrayMap(sessions))
-            updateSession(data)
-        } else {
-            setTimeBlocks(arrayMap(timeBlocks))
-            updateTimeBlock(data)
-        }
+        if (eventInfo.event.extendedProps.item) updateSession(data)
+        else updateTimeBlock(data)
     }
 
     // *****************************************
@@ -413,6 +392,7 @@ const IndexPage = () => {
         DeleteTimeBlockMutationVariables
     >(DELETE_TIME_BLOCK, {
         onCompleted: () => {
+            queryTimeBlocks.refetch()
             toast.success("Time block deleted!")
         },
     })
@@ -421,6 +401,7 @@ const IndexPage = () => {
         DeleteSessionMutationVariables
     >(DELETE_SESSION, {
         onCompleted: () => {
+            querySessions.refetch()
             toast.success("Session deleted!")
         },
     })
@@ -432,13 +413,9 @@ const IndexPage = () => {
             },
         }
         // only sessions have items
-        if (modalEvent.extendedProps.item) {
-            setSessions(sessions.filter((session) => session.id != id))
-            deleteSession(data)
-        } else {
-            setTimeBlocks(timeBlocks.filter((block) => block.id != id))
-            deleteTimeBlock(data)
-        }
+        if (modalEvent.extendedProps.item) deleteSession(data)
+        else deleteTimeBlock(data)
+
         modalRef.current.closeModal()
     }
     // *****************************************
@@ -449,28 +426,34 @@ const IndexPage = () => {
         CreateSessionMutationVariables
     >(CREATE_SESSION, {
         onCompleted: () => {
+            querySessions.refetch()
             toast.success("Session created!")
         },
     })
-    async function copyEvent() {
+    function copyEvent() {
         modalRef.current.closeModal()
-        const res = await createSession({
-            variables: {
-                input: {
-                    type: "PLANNED" as SessionType,
-                    start: modalEvent.start,
-                    end: modalEvent.end,
-                    itemId: modalEvent.extendedProps.item.id,
+        // only sessions have items
+        if (modalEvent.extendedProps.item)
+            createSession({
+                variables: {
+                    input: {
+                        type: "PLANNED" as SessionType,
+                        start: modalEvent.start,
+                        end: modalEvent.end,
+                        itemId: modalEvent.extendedProps.item.id,
+                    },
                 },
-            },
-        })
-        setSessions([
-            ...sessions,
-            {
-                ...res.data.createSession,
-                title: res.data.createSession.item.name,
-            },
-        ])
+            })
+        else
+            createTimeBlock({
+                variables: {
+                    input: {
+                        start: modalEvent.start,
+                        end: modalEvent.end ?? addHours(modalEvent.start, 1),
+                        typeId: modalEvent.extendedProps.type.id,
+                    },
+                },
+            })
     }
     // *****************************************
     // * TRACK event
@@ -487,16 +470,6 @@ const IndexPage = () => {
                 },
             },
         })
-        setSessions(
-            sessions.map((session) => {
-                if (session.id == id)
-                    return {
-                        ...session,
-                        type: "TRACKED",
-                    }
-                return session
-            })
-        )
     }
 
     // *****************************************
@@ -511,18 +484,9 @@ const IndexPage = () => {
         CreateSessionsMutationVariables
     >(CREATE_SESSIONS, {
         onCompleted: () => {
+            querySessions.refetch()
             toast.success("Sessions created!")
         },
-        refetchQueries: [
-            {
-                query: QUERY_SESSIONS,
-                variables: {
-                    start: currentStart,
-                    end: currentEnd,
-                },
-            },
-        ],
-        awaitRefetchQueries: true,
     })
     const [deleteSessions] = useMutation<
         DeleteSessionsMutation,
@@ -530,7 +494,7 @@ const IndexPage = () => {
     >(DELETE_SESSIONS)
 
     function recalculate() {
-        const copyTimeBlocks = timeBlocks
+        const copyTimeBlocks = queryTimeBlocks.data.timeBlocks
             .filter((block) => isBefore(new Date(), block.start))
             .map((block) => {
                 const timePlanned = 0
@@ -547,7 +511,7 @@ const IndexPage = () => {
 
         deleteSessions({
             variables: {
-                ids: sessions
+                ids: querySessions.data.sessions
                     .filter(
                         (s) =>
                             isBefore(copyTimeBlocks[0].start, s.start) ||
@@ -644,7 +608,8 @@ const IndexPage = () => {
                     <div className="flex items-center justify-between mb-10">
                         <h1 className="mb-0">Calendar</h1>
                         <div className="flex gap-4">
-                            {timeBlocks.length > 0 ? (
+                            {queryTimeBlocks.data &&
+                            queryTimeBlocks.data.timeBlocks.length > 0 ? (
                                 <button onClick={recalculate}>
                                     <Icon icon="gravity-ui:arrows-rotate-left" />{" "}
                                     Recalculate
