@@ -17,7 +17,11 @@ export const schema = gql`
     }
 
     type Query {
-        sessions(start: DateTime!, end: DateTime!): [Session!]! @requireAuth
+        sessions(
+            start: DateTime!
+            end: DateTime!
+            type: SessionType
+        ): [Session!]! @requireAuth
         session(id: Int!): Session @requireAuth
     }
 

@@ -39,55 +39,6 @@ a {
 form {
     @apply flex flex-col gap-3;
 
-    input,
-    textarea,
-    select {
-        @apply border border-gray-300 w-full py-3 px-4 outline-none;
-        &:focus {
-            @apply border-black;
-        }
-        &::placeholder {
-            @apply text-gray-400; // !important;
-        }
-    }
-
-    input,
-    select {
-        @apply rounded-full;
-    }
-
-    textarea {
-        @apply rounded-3xl;
-    }
-
-    .select {
-        [class*="control"] {
-            @apply rounded-full border border-gray-300 py-1 px-2 outline-none shadow-none;
-            &.focused {
-                @apply border-black;
-            }
-        }
-        [class*="menu"],
-        .menu-list {
-            @apply rounded-3xl py-0;
-        }
-        [class*="option"] {
-            @apply px-5;
-            &:hover {
-                @apply bg-gray-200;
-            }
-            &:first-child {
-                @apply rounded-t-3xl;
-            }
-            &:last-child {
-                @apply rounded-b-3xl;
-            }
-            &[aria-selected="true"] {
-                @apply bg-black;
-            }
-        }
-    }
-
     p,
     label {
         @extend .eyebrow;
@@ -99,6 +50,57 @@ form {
 
         & > * {
             @apply w-full;
+        }
+    }
+}
+
+input,
+textarea,
+select {
+    @apply border border-gray-300 w-full py-3 px-4 outline-none;
+    &:focus {
+        @apply border-black;
+    }
+    &::placeholder {
+        @apply text-gray-400; // !important;
+    }
+}
+
+input,
+select {
+    @apply rounded-full;
+}
+
+textarea {
+    @apply rounded-3xl;
+}
+
+.select {
+    @apply w-full;
+
+    [class*="control"] {
+        @apply rounded-full border border-gray-300 py-1 px-2 outline-none shadow-none;
+        &.focused {
+            @apply border-black;
+        }
+    }
+    [class*="menu"],
+    .menu-list {
+        @apply rounded-3xl py-0;
+    }
+    [class*="option"] {
+        @apply px-5;
+        &:hover {
+            @apply bg-gray-200;
+        }
+        &:first-child {
+            @apply rounded-t-3xl;
+        }
+        &:last-child {
+            @apply rounded-b-3xl;
+        }
+        &[aria-selected="true"] {
+            @apply bg-black;
         }
     }
 }
