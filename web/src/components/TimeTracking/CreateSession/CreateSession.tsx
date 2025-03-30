@@ -84,7 +84,7 @@ const CreateSession = ({ query }: Props) => {
     return (
         <>
             <button onClick={() => modalRef.current.openModal()}>
-                <Icon icon="gravity-ui:circle-plus" /> Add Time Entry
+                <Icon icon="gravity-ui:circle-plus" /> Manual Time Entry
             </button>
             <CustomModal ref={modalRef}>
                 <h2>Create Time Entry</h2>
