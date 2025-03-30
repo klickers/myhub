@@ -4,7 +4,6 @@ import { Icon } from "@iconify/react/dist/iconify.js"
 import Select from "react-select"
 import { Item } from "types/graphql"
 
-import { TextAreaField } from "@redwoodjs/forms"
 import { useQuery } from "@redwoodjs/web"
 
 import { QUERY_ACTIVE_ITEMS } from "src/graphql/queries/getActiveItems.query"
