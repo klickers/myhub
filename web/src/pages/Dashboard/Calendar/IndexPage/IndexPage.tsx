@@ -533,7 +533,7 @@ const IndexPage = () => {
                         )
                         .forEach((s) => {
                             const diff = differenceInMinutes(s.end, s.start)
-                            if (data.timeRemaining > diff)
+                            if (data.timeRemaining - diff > 0)
                                 data.timeRemaining -= diff
                             else data.timeRemaining = 0
                         })
