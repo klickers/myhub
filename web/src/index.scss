@@ -206,9 +206,12 @@ button,
                         @apply text-gray-400;
                     }
 
-                    &.react-datepicker__day--selected,
-                    &.react-datepicker__day--today {
+                    &.react-datepicker__day--selected {
                         @apply bg-gray-200;
+                    }
+
+                    &.react-datepicker__day--today {
+                        @apply border border-gray-200;
                     }
                 }
             }
