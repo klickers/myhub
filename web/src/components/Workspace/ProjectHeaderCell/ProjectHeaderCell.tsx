@@ -1,3 +1,7 @@
+import { useState } from "react"
+
+import { BlockNoteView } from "@blocknote/mantine"
+import { useCreateBlockNote } from "@blocknote/react"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import type {
     FindProjectHeaderQuery,
@@ -15,6 +19,8 @@ import {
 } from "@redwoodjs/web"
 
 import Breadcrumb from "../Breadcrumb/Breadcrumb"
+
+import "@blocknote/mantine/style.css"
 
 export const QUERY: TypedDocumentNode<
     FindProjectHeaderQuery,
@@ -60,6 +66,9 @@ export const Success = ({
     FindProjectHeaderQuery,
     FindProjectHeaderQueryVariables
 >) => {
+    const editor = useCreateBlockNote()
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
     return (
         <>
             <Metadata title={project.name} description={project.description} />
@@ -72,13 +81,32 @@ export const Success = ({
                 ) : null}
                 <Breadcrumb item={project.parent as Item} />
             </p>
-            <Link
-                to={routes.workspaceUpdateProject({ slug: project.slug })}
-                className="float-right"
-            >
-                <Icon icon="gravity-ui:pencil" />
-            </Link>
+            <div className="flex gap-2 float-right">
+                <button
+                    className="button--circle"
+                    onClick={() => setIsSidebarOpen(true)}
+                >
+                    <Icon icon="gravity-ui:file-text" />
+                </button>
+                <Link
+                    to={routes.workspaceUpdateProject({ slug: project.slug })}
+                    className="button button--circle"
+                >
+                    <Icon icon="gravity-ui:pencil" />
+                </Link>
+            </div>
             <h2>{project.name}</h2>
+            {isSidebarOpen ? (
+                <div id="modal">
+                    <div
+                        className="fixed w-screen h-screen bg-black bg-opacity-50 top-0 left-0"
+                        onClick={() => setIsSidebarOpen(false)}
+                    ></div>
+                    <div className="rounded-l-3xl fixed h-screen w-2/3 right-0 top-0 bg-white overflow-y-scroll">
+                        <BlockNoteView editor={editor} />
+                    </div>
+                </div>
+            ) : null}
         </>
     )
 }
