@@ -1,12 +1,16 @@
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
+import { BlockNoteEditor, PartialBlock } from "@blocknote/core"
 import { BlockNoteView } from "@blocknote/mantine"
 import { useCreateBlockNote } from "@blocknote/react"
+import { JsonRequestError } from "@fullcalendar/core/index.js"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import type {
     FindProjectHeaderQuery,
     FindProjectHeaderQueryVariables,
     Item,
+    UpdateProjectMutation,
+    UpdateProjectMutationVariables,
 } from "types/graphql"
 
 import { Link } from "@redwoodjs/router"
@@ -16,11 +20,29 @@ import {
     type CellFailureProps,
     type TypedDocumentNode,
     Metadata,
+    useMutation,
 } from "@redwoodjs/web"
+import { toast } from "@redwoodjs/web/toast"
 
 import Breadcrumb from "../Breadcrumb/Breadcrumb"
 
 import "@blocknote/mantine/style.css"
+
+const debounce = (fn: Function, ms = 500) => {
+    let timeoutId: ReturnType<typeof setTimeout>
+    return function (this: any, ...args: any[]) {
+        clearTimeout(timeoutId)
+        timeoutId = setTimeout(() => fn.apply(this, args), ms)
+    }
+}
+
+const UPDATE_PROJECT = gql`
+    mutation UpdateProjectMutation($id: String!, $input: UpdateItemInput!) {
+        updateItem(id: $id, input: $input) {
+            id
+        }
+    }
+`
 
 export const QUERY: TypedDocumentNode<
     FindProjectHeaderQuery,
@@ -28,9 +50,11 @@ export const QUERY: TypedDocumentNode<
 > = gql`
     query FindProjectHeaderQuery($slug: String!) {
         project(slug: $slug) {
+            id
             name
             slug
             description
+            notes
             parent {
                 name
                 slug
@@ -66,8 +90,47 @@ export const Success = ({
     FindProjectHeaderQuery,
     FindProjectHeaderQueryVariables
 >) => {
-    const editor = useCreateBlockNote()
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+    const [initialContent, setInitialContent] = useState<
+        PartialBlock[] | undefined | "loading"
+    >(JSON.parse(project.notes) as PartialBlock[])
+
+    useEffect(() => {
+        setInitialContent(JSON.parse(project.notes) as PartialBlock[])
+    }, [project])
+
+    const editor = useMemo(() => {
+        if (initialContent === "loading") return undefined
+        return BlockNoteEditor.create({ initialContent })
+    }, [initialContent])
+
+    const debouncedSave = React.useRef(
+        debounce(async (editor: BlockNoteEditor) => {
+            if (editor)
+                update({
+                    variables: {
+                        id: project.id,
+                        input: {
+                            notes: JSON.stringify(editor.document),
+                        },
+                    },
+                })
+        }, 500)
+    ).current
+
+    const [update] = useMutation<
+        UpdateProjectMutation,
+        UpdateProjectMutationVariables
+    >(UPDATE_PROJECT, {
+        onCompleted: () => {
+            toast.success("Document updated!")
+        },
+    })
+
+    if (editor === undefined) {
+        return "Loading content..."
+    }
 
     return (
         <>
@@ -103,7 +166,10 @@ export const Success = ({
                         onClick={() => setIsSidebarOpen(false)}
                     ></div>
                     <div className="rounded-l-3xl fixed h-screen w-2/3 right-0 top-0 bg-white overflow-y-scroll">
-                        <BlockNoteView editor={editor} />
+                        <BlockNoteView
+                            editor={editor}
+                            onChange={() => debouncedSave(editor)}
+                        />
                     </div>
                 </div>
             ) : null}
