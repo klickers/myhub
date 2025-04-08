@@ -271,7 +271,9 @@ export const Success = ({
                                             }
                                         />
                                     </td>
-                                    <td className={`number ${percentColor}`}>
+                                    <td
+                                        className={`number text-xs ${percentColor}`}
+                                    >
                                         {timePlanned} /{" "}
                                         {item.estimatedTime ?? "NA"}
                                     </td>
