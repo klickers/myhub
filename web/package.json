@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^2",
+    "@blocknote/core": "^0.28.0",
+    "@blocknote/mantine": "^0.28.0",
+    "@blocknote/react": "^0.28.0",
     "@clerk/clerk-react": "^4",
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/google-calendar": "^6.1.15",
