@@ -2,8 +2,6 @@ import { useEffect, useMemo, useState } from "react"
 
 import { BlockNoteEditor, PartialBlock } from "@blocknote/core"
 import { BlockNoteView } from "@blocknote/mantine"
-import { useCreateBlockNote } from "@blocknote/react"
-import { JsonRequestError } from "@fullcalendar/core/index.js"
 import { Icon } from "@iconify/react/dist/iconify.js"
 import type {
     FindProjectHeaderQuery,
@@ -27,6 +25,7 @@ import { toast } from "@redwoodjs/web/toast"
 import Breadcrumb from "../Breadcrumb/Breadcrumb"
 
 import "@blocknote/mantine/style.css"
+import "../../../styles/blocknote.scss"
 
 const debounce = (fn: Function, ms = 500) => {
     let timeoutId: ReturnType<typeof setTimeout>

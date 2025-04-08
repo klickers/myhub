@@ -1,8 +1,20 @@
 .bn-default-styles,
 .bn-mantine {
-    @apply font-default !important;
+    @apply font-default;
 }
 
 .bn-container {
     @apply py-6 rounded-3xl;
+}
+
+.bn-block-content {
+    @apply py-1;
+
+    &:has(h1) {
+        @apply pt-6;
+    }
+
+    &:has(h2) {
+        @apply pt-3;
+    }
 }
