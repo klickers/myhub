@@ -270,7 +270,7 @@ table.tasks {
     td {
         @apply pt-1 pb-1 px-1;
 
-        & > *:not(.react-datepicker__tab-loop) {
+        & > *:not(.react-datepicker__tab-loop):not(.task__status-dropdown) {
             @apply border border-transparent rounded-3xl px-2 py-1;
         }
 
@@ -315,7 +315,7 @@ table.tasks {
     }
 
     .task__status-dropdown {
-        @apply hidden cursor-pointer absolute top-5 right-0 rounded-3xl bg-white shadow-lg p-6 space-y-2 z-10 min-w-40;
+        @apply hidden cursor-pointer absolute top-5 right-0 rounded-3xl bg-white shadow-lg p-6 space-y-2 z-10 min-w-36;
 
         button {
             &:hover {
