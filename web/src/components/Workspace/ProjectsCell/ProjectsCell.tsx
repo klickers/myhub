@@ -56,8 +56,12 @@ export const Success = ({
                                     })}
                                     className="project-card__link"
                                 >
-                                    <h3>{item.name}</h3>
-                                    <p>{item.description}</p>
+                                    <h3 className="mb-0">{item.name}</h3>
+                                    {item.description ? (
+                                        <p className="mt-3">
+                                            {item.description}
+                                        </p>
+                                    ) : null}
                                     {item.startDate || item.dueDate ? (
                                         <p className="project-card__dates">
                                             {item.startDate
