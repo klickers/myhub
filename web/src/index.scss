@@ -254,15 +254,41 @@ button,
 table.tasks {
     th {
         @extend .eyebrow;
-        @apply text-left px-1 whitespace-nowrap;
+        @apply text-left px-1 whitespace-nowrap pb-2;
+    }
+
+    tr {
+        @apply border-b border-gray-200 px-3;
+    }
+
+    tbody tr {
+        &:hover {
+            @apply bg-gray-50;
+        }
     }
 
     td {
-        @apply pt-2 pb-1 px-1;
+        @apply pt-1 pb-1 px-1;
+
+        & > *:not(.react-datepicker__tab-loop) {
+            @apply border border-transparent rounded-3xl px-2 py-1;
+        }
+
+        &:hover,
+        &:focus {
+            & > * {
+                @apply border-gray-300 bg-white;
+            }
+        }
 
         .react-datepicker-wrapper {
             input {
-                @apply text-right max-w-28 -z-10;
+                @apply text-right max-w-28 -z-10 border-none px-1 py-0;
+
+                &:hover,
+                &:focus {
+                    @apply border;
+                }
             }
         }
     }
@@ -275,6 +301,19 @@ table.tasks {
 .task__status-dropdown-wrapper {
     @apply relative;
 
+    & > * {
+        @apply border-none p-0;
+    }
+
+    &:hover {
+        & > .task__status-dropdown {
+            @apply block;
+        }
+        & > * {
+            @apply bg-gray-100;
+        }
+    }
+
     .task__status-dropdown {
         @apply hidden cursor-pointer absolute top-5 right-0 rounded-3xl bg-white shadow-lg p-6 space-y-2 z-10 min-w-40;
 
@@ -283,10 +322,6 @@ table.tasks {
                 @apply underline;
             }
         }
-    }
-
-    &:hover > .task__status-dropdown {
-        @apply block;
     }
 }
 

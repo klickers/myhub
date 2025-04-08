@@ -220,10 +220,7 @@ export const Success = ({
                             }
 
                             return (
-                                <tr
-                                    key={item.id}
-                                    className="border-b border-gray-200 relative"
-                                >
+                                <tr key={item.id}>
                                     <td className="task__status-dropdown-wrapper">
                                         <div>
                                             {item.status ? (
@@ -275,7 +272,8 @@ export const Success = ({
                                         />
                                     </td>
                                     <td className={`number ${percentColor}`}>
-                                        {percentPlanned}%
+                                        {timePlanned} /{" "}
+                                        {item.estimatedTime ?? "NA"}
                                     </td>
                                     <td className="number">
                                         <ContentEditable
