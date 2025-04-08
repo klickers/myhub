@@ -8,11 +8,11 @@ const WorkspaceLayout = ({ children }: WorkspaceLayoutProps) => {
     return (
         <>
             <h1>Workspace</h1>
-            <div className="flex gap-10">
-                <div className="w-1/5">
+            <div className="flex gap-10 flex-col sm:flex-row">
+                <div className="sm:w-1/5 w-full">
                     <FoldersCell />
                 </div>
-                <div className="w-4/5">{children}</div>
+                <div className="sm:w-4/5 w-full">{children}</div>
             </div>
         </>
     )
