@@ -87,6 +87,7 @@ const QUERY_TIME_BLOCKS = gql`
     query TimeBlocksQuery($start: DateTime!, $end: DateTime!) {
         timeBlocks(start: $start, end: $end) {
             id
+            __typename
             start
             end
             type {
@@ -101,6 +102,13 @@ const CREATE_TIME_BLOCK = gql`
     mutation CreateTimeBlockMutation($input: CreateTimeBlockInput!) {
         createTimeBlock(input: $input) {
             id
+            __typename
+            start
+            end
+            type {
+                id
+                name
+            }
         }
     }
 `
@@ -109,6 +117,13 @@ const UPDATE_TIME_BLOCK = gql`
     mutation UpdateTimeBlockMutation($id: Int!, $input: UpdateTimeBlockInput!) {
         updateTimeBlock(id: $id, input: $input) {
             id
+            __typename
+            start
+            end
+            type {
+                id
+                name
+            }
         }
     }
 `
@@ -125,6 +140,7 @@ const QUERY_SESSIONS = gql`
     query SessionsQuery($start: DateTime!, $end: DateTime!) {
         sessions(start: $start, end: $end) {
             id
+            __typename
             start
             end
             type
@@ -146,6 +162,20 @@ const CREATE_SESSIONS = gql`
     mutation CreateSessionsMutation($input: [CreateSessionInput!]!) {
         createSessions(input: $input) {
             id
+            __typename
+            start
+            end
+            type
+            notes
+            item {
+                id
+                name
+                parent {
+                    type
+                    name
+                    slug
+                }
+            }
         }
     }
 `
@@ -160,9 +190,11 @@ const CREATE_SESSION = gql`
     mutation CreateSessionMutation($input: CreateSessionInput!) {
         createSession(input: $input) {
             id
+            __typename
             start
             end
             type
+            notes
             item {
                 id
                 name
@@ -180,6 +212,20 @@ const UPDATE_SESSION = gql`
     mutation UpdateSessionMutation($id: Int!, $input: UpdateSessionInput!) {
         updateSession(id: $id, input: $input) {
             id
+            __typename
+            start
+            end
+            type
+            notes
+            item {
+                id
+                name
+                parent {
+                    type
+                    name
+                    slug
+                }
+            }
         }
     }
 `
