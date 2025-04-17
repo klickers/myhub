@@ -13,7 +13,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             <Toaster />
             <aside
                 id="sidenav"
-                className="w-16 h-screen fixed p-2 border-r border-gray-200"
+                className="w-16 h-screen fixed p-2 border-r border-black"
             >
                 <SidebarButton
                     to={routes.calendar()}
