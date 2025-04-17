@@ -52,7 +52,7 @@ export const Success = ({
         <div>
             {sessions.map((session) => (
                 <div key={session.id} className="flex gap-4">
-                    <p className="text-xs">
+                    <p className="text-xs w-14 flex-shrink-0">
                         <span className="font-semibold">
                             {format(session.start, "KK:mm b")}
                         </span>
