@@ -21,7 +21,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                     label="Home"
                 />
                 <SidebarButton
-                    to={routes.timeTracking()}
+                    to={routes.logbook()}
                     icon="game-icons:notebook"
                     label="logbook"
                 />

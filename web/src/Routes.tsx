@@ -10,7 +10,7 @@ const Routes = () => {
             <PrivateSet unauthenticated="landing">
                 <Set wrap={DashboardLayout} title="Dashboard">
                     <Route path="/dashboard" page={DashboardIndexPage} name="dashboard" />
-                    <Route path="/dashboard/time-tracking" page={DashboardTimeTrackingIndexPage} name="timeTracking" />
+                    <Route path="/dashboard/logbook" page={DashboardTimeTrackingIndexPage} name="logbook" />
                     <Route path="/dashboard/calendar" page={DashboardCalendarIndexPage} name="calendar" />
                     <Set wrap={WorkspaceLayout} title="Workspace">
                         <Route path="/dashboard/workspace" page={DashboardWorkspaceIndexPage} name="workspace" />

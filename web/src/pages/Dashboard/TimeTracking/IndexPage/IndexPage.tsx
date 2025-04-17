@@ -9,8 +9,8 @@ import UpcomingSessionsCell from "src/components/TimeTracking/UpcomingSessionsCe
 const IndexPage = () => {
     return (
         <>
-            <Metadata title="Time Tracking" description="Time tracking" />
-            <h1>Time Tracking</h1>
+            <Metadata title="Logbook" description="Time tracking" />
+            <h1>Logbook</h1>
             <div className="flex gap-12 w-full">
                 <div className="w-1/3">
                     <PlayTimeEntry />
