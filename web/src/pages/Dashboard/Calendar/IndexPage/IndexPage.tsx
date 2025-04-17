@@ -657,6 +657,7 @@ const IndexPage = () => {
                             }}
                             snapDuration="00:05:00"
                             slotDuration="00:30:00"
+                            slotMinTime="00:00:00"
                             expandRows
                             googleCalendarApiKey={googleCalendarApiKey}
                             eventSources={eventSources}
