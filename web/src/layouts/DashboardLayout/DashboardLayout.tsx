@@ -27,11 +27,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 />
                 <div className="mt-10">
                     <SidebarButton
-                        to={routes.workspace()}
-                        icon="gravity-ui:square-list-ul"
-                        label="Workspace"
-                    />
-                    <SidebarButton
                         to={routes.codex()}
                         icon="game-icons:book-cover"
                         label="Skill Codex"
@@ -45,6 +40,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                         to="#!"
                         icon="game-icons:flamed-leaf"
                         label="Quests"
+                    />
+                    <SidebarButton
+                        to={routes.workspace()}
+                        icon="gravity-ui:square-list-ul"
+                        label="Workspace"
                     />
                 </div>
                 <div className="absolute bottom-2">
