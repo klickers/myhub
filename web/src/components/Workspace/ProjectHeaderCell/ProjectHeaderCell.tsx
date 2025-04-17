@@ -22,18 +22,12 @@ import {
 } from "@redwoodjs/web"
 import { toast } from "@redwoodjs/web/toast"
 
+import debounce from "src/scripts/debounce"
+
 import Breadcrumb from "../Breadcrumb/Breadcrumb"
 
 import "@blocknote/mantine/style.css"
 import "../../../styles/blocknote.scss"
-
-const debounce = (fn: Function, ms = 500) => {
-    let timeoutId: ReturnType<typeof setTimeout>
-    return function (this: any, ...args: any[]) {
-        clearTimeout(timeoutId)
-        timeoutId = setTimeout(() => fn.apply(this, args), ms)
-    }
-}
 
 const UPDATE_QUEST = gql`
     mutation UpdateProjectMutation($id: String!, $input: UpdateItemInput!) {

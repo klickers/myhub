@@ -42,6 +42,7 @@ import { toast } from "@redwoodjs/web/toast"
 
 import CustomModal from "src/components/CustomModal/CustomModal"
 import Breadcrumb from "src/components/Workspace/Breadcrumb/Breadcrumb"
+import debounce from "src/scripts/debounce"
 
 import TimeBlockSidebar from "../../../../components/Calendar/TimeBlockSidebar/TimeBlockSidebar"
 
@@ -599,6 +600,20 @@ const IndexPage = () => {
         })
     }
 
+    const updateSessionNotes = React.useRef(
+        debounce(async (id: string, el: HTMLTextAreaElement) => {
+            if (el.value)
+                updateSession({
+                    variables: {
+                        id: parseInt(id),
+                        input: {
+                            notes: el.value,
+                        },
+                    },
+                })
+        }, 500)
+    ).current
+
     return (
         <>
             <Metadata title="Calendar" description="Dashboard calendar" />
@@ -673,14 +688,21 @@ const IndexPage = () => {
                                     </p>
                                 </>
                             ) : null}
-                            {modalEvent.extendedProps.notes ? (
-                                <>
-                                    <p className="eyebrow">Notes</p>
-                                    <p className="mb-6">
-                                        {modalEvent.extendedProps.notes}
-                                    </p>
-                                </>
-                            ) : null}
+                            <div>
+                                <p className="eyebrow">Notes</p>
+                                <textarea
+                                    name="notes"
+                                    className="mb-6"
+                                    onChange={(e) =>
+                                        updateSessionNotes(
+                                            modalEvent.id,
+                                            e.target
+                                        )
+                                    }
+                                >
+                                    {modalEvent.extendedProps.notes}
+                                </textarea>
+                            </div>
                             <div className="flex justify-between w-full">
                                 <div className="flex gap-3">
                                     <button
