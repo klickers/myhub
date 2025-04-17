@@ -679,7 +679,12 @@ const IndexPage = () => {
                                     item={modalEvent.extendedProps.item.parent}
                                 />
                             ) : null}
-                            <h2 className="mt-2">{modalEvent.title}</h2>
+                            <h2
+                                className="mt-2"
+                                dangerouslySetInnerHTML={{
+                                    __html: modalEvent.title,
+                                }}
+                            ></h2>
                             {modalEvent.extendedProps.location ? (
                                 <>
                                     <p className="eyebrow">Location</p>
@@ -756,7 +761,7 @@ function renderEventContent(eventInfo) {
                 {format(eventInfo.event.start, "h:mm")} -{" "}
                 {format(eventInfo.event.end, "h:mm")}
             </p>
-            <p>{eventInfo.event.title}</p>
+            <p dangerouslySetInnerHTML={{ __html: eventInfo.event.title }}></p>
         </div>
     )
 }
