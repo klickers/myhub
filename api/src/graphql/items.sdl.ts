@@ -47,6 +47,9 @@ export const schema = gql`
 
         tasks(parentSlug: String, statusCodes: [StatusCode]): [Item!]!
             @requireAuth
+
+        skills: [Item!]! @requireAuth
+        skill(id: String!): Item @requireAuth
     }
 
     input CreateItemInput {
@@ -65,6 +68,7 @@ export const schema = gql`
         parentId: String
         statusId: Int
         userId: String
+        parents: [String]
     }
 
     input UpdateItemInput {
@@ -83,10 +87,12 @@ export const schema = gql`
         parentId: String
         statusId: Int
         userId: String
+        parents: [String]
     }
 
     type Mutation {
-        createItem(input: CreateItemInput!): Item! @requireAuth
+        createItem(input: CreateItemInput!, parents: [String]): Item!
+            @requireAuth
         updateItem(id: String!, input: UpdateItemInput!): Item! @requireAuth
         deleteItem(id: String!): Item! @requireAuth
     }

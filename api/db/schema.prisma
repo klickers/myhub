@@ -64,8 +64,8 @@ model Item {
     user     User        @relation(fields: [userId], references: [clerkId])
     sessions Session[]
 
-    parents          ItemsOnItems[] @relation("ItemParent")
-    childrenExplicit ItemsOnItems[] @relation("ItemChild")
+    parents          ItemsOnItems[] @relation("ItemChild")
+    childrenExplicit ItemsOnItems[] @relation("ItemParent")
 
     @@unique([userId, slug])
 }

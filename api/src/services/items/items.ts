@@ -150,9 +150,40 @@ export const tasks: QueryResolvers["tasks"] = ({ parentSlug, statusCodes }) => {
     })
 }
 
-export const createItem: MutationResolvers["createItem"] = ({ input }) => {
+export const skills: QueryResolvers["skills"] = () => {
+    return db.item.findMany({
+        where: {
+            type: "SKILL" as ItemType,
+            userId: context.currentUser.id,
+        },
+        orderBy: {
+            name: "asc",
+        },
+    })
+}
+
+export const skill: QueryResolvers["skill"] = ({ id }) => {
+    return db.item.findUnique({ where: { id } })
+}
+
+export const createItem: MutationResolvers["createItem"] = ({
+    input,
+    parents,
+}) => {
     return db.item.create({
-        data: { ...input, userId: context.currentUser.id },
+        data: {
+            ...input,
+            userId: context.currentUser.id,
+            ...(parents
+                ? {
+                      parents: {
+                          create: parents.map((parentId) => ({
+                              parent: { connect: { id: parentId } },
+                          })),
+                      },
+                  }
+                : null),
+        },
     })
 }
 
@@ -184,5 +215,13 @@ export const Item: ItemRelationResolvers = {
     },
     sessions: (_obj, { root }) => {
         return db.item.findUnique({ where: { id: root?.id } }).sessions()
+    },
+    parents: (_obj, { root }) => {
+        return db.item.findUnique({ where: { id: root?.id } }).parents()
+    },
+    childrenExplicit: (_obj, { root }) => {
+        return db.item
+            .findUnique({ where: { id: root?.id } })
+            .childrenExplicit()
     },
 }
