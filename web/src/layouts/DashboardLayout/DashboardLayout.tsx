@@ -32,7 +32,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                         label="Workspace"
                     />
                     <SidebarButton
-                        to="#!"
+                        to={routes.codex()}
                         icon="game-icons:book-cover"
                         label="Skill Codex"
                     />
