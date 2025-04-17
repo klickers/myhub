@@ -17,42 +17,40 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             >
                 <SidebarButton
                     to={routes.calendar()}
-                    icon="gravity-ui:house"
+                    icon="game-icons:castle"
                     label="Home"
                 />
+                <SidebarButton
+                    to={routes.timeTracking()}
+                    icon="game-icons:notebook"
+                    label="logbook"
+                />
                 <div className="mt-10">
-                    <SidebarButton
-                        to={routes.timeTracking()}
-                        icon="gravity-ui:clock"
-                        label="logbook"
-                    />
                     <SidebarButton
                         to={routes.workspace()}
                         icon="gravity-ui:square-list-ul"
                         label="Workspace"
                     />
-                </div>
-                <div className="mt-10">
                     <SidebarButton
                         to="#!"
-                        icon="gravity-ui:book"
+                        icon="game-icons:book-cover"
                         label="Skill Codex"
                     />
                     <SidebarButton
                         to="#!"
-                        icon="gravity-ui:bulb"
+                        icon="game-icons:treasure-map"
                         label="Campaigns"
                     />
                     <SidebarButton
                         to="#!"
-                        icon="gravity-ui:heart"
+                        icon="game-icons:flamed-leaf"
                         label="Quests"
                     />
                 </div>
                 <div className="absolute bottom-2">
                     <SidebarButton
                         to={routes.settings()}
-                        icon="gravity-ui:gear"
+                        icon="game-icons:big-gear"
                         label="Settings"
                     />
                 </div>
