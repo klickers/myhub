@@ -16,14 +16,19 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 className="w-16 h-screen fixed p-2 border-r border-black"
             >
                 <SidebarButton
-                    to={routes.calendar()}
+                    to={routes.dashboard()}
                     icon="game-icons:castle"
                     label="Home"
                 />
                 <SidebarButton
                     to={routes.logbook()}
                     icon="game-icons:notebook"
-                    label="logbook"
+                    label="Logbook"
+                />
+                <SidebarButton
+                    to={routes.calendar()}
+                    icon="game-icons:calendar"
+                    label="Calendar"
                 />
                 <div className="mt-10">
                     <SidebarButton
