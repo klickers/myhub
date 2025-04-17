@@ -33,8 +33,11 @@ model KeyValue {
 
 enum ItemType {
     FOLDER
-    PROJECT
     TASK
+
+    SKILL
+    CAMPAIGN
+    QUEST
 }
 
 model Item {
@@ -61,7 +64,21 @@ model Item {
     user     User        @relation(fields: [userId], references: [clerkId])
     sessions Session[]
 
+    parents          ItemsOnItems[] @relation("ItemParent")
+    childrenExplicit ItemsOnItems[] @relation("ItemChild")
+
     @@unique([userId, slug])
+}
+
+model ItemsOnItems {
+    parentId  String
+    childId   String
+    createdAt DateTime @default(now())
+
+    parent Item @relation("ItemParent", fields: [parentId], references: [id])
+    child  Item @relation("ItemChild", fields: [childId], references: [id])
+
+    @@id([parentId, childId])
 }
 
 enum StatusCode {

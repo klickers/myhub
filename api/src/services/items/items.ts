@@ -63,7 +63,7 @@ export const folder: QueryResolvers["folder"] = ({ slug }) => {
 export const projects: QueryResolvers["projects"] = ({ parentSlug }) => {
     return db.item.findMany({
         where: {
-            type: "PROJECT" as ItemType,
+            type: "QUEST" as ItemType,
             userId: context.currentUser.id,
             parent: {
                 slug: parentSlug,
@@ -94,7 +94,7 @@ export const project: QueryResolvers["project"] = ({ slug }) => {
     return db.item.findFirst({
         where: {
             slug,
-            type: "PROJECT" as ItemType,
+            type: "QUEST" as ItemType,
             userId: context.currentUser.id,
         },
     })

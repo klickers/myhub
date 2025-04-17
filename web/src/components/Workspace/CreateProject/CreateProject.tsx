@@ -34,7 +34,7 @@ interface FormValues {
     description?: string
 }
 
-const CREATE_PROJECT = gql`
+const CREATE_QUEST = gql`
     mutation CreateProjectMutation($input: CreateItemInput!) {
         createItem(input: $input) {
             id
@@ -53,7 +53,7 @@ const CreateProject = ({ parentId, query }: Props) => {
     const [create, { loading, error }] = useMutation<
         CreateProjectMutation,
         CreateProjectMutationVariables
-    >(CREATE_PROJECT, {
+    >(CREATE_QUEST, {
         onCompleted: () => {
             toast.success("Project created!")
             formMethods.reset()
@@ -70,7 +70,7 @@ const CreateProject = ({ parentId, query }: Props) => {
             variables: {
                 input: {
                     ...data,
-                    type: "PROJECT" as ItemType,
+                    type: "QUEST" as ItemType,
                     startDate,
                     dueDate,
                     parentId,

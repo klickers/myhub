@@ -21,12 +21,17 @@ export const schema = gql`
         status: ItemStatus
         user: User!
         sessions: [Session]!
+        parents: [Item]!
+        childrenExplicit: [Item]!
     }
 
     enum ItemType {
         FOLDER
-        PROJECT
         TASK
+
+        SKILL
+        CAMPAIGN
+        QUEST
     }
 
     type Query {

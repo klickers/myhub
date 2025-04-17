@@ -36,7 +36,7 @@ interface FormValues {
     //slug: string
 }
 
-const CREATE_PROJECT = gql`
+const CREATE_QUEST = gql`
     mutation CreateTaskMutation($input: CreateItemInput!) {
         createItem(input: $input) {
             id
@@ -55,7 +55,7 @@ const CreateTask = ({ parentId, tasks, setTasks }: Props) => {
     const [create, { loading, error }] = useMutation<
         CreateTaskMutation,
         CreateTaskMutationVariables
-    >(CREATE_PROJECT, {
+    >(CREATE_QUEST, {
         onCompleted: () => {
             toast.success("Task created!")
             formMethods.reset()

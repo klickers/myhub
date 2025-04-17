@@ -34,7 +34,7 @@ interface FormValues {
     description?: string
 }
 
-const UPDATE_PROJECT = gql`
+const UPDATE_QUEST = gql`
     mutation UpdateProjectMutation($id: String!, $input: UpdateItemInput!) {
         updateItem(id: $id, input: $input) {
             id
@@ -85,7 +85,7 @@ export const Success = ({
     const [update, { loading, error }] = useMutation<
         UpdateProjectMutation,
         UpdateProjectMutationVariables
-    >(UPDATE_PROJECT, {
+    >(UPDATE_QUEST, {
         onCompleted: () => {
             toast.success("Project updated!")
             // redirect to project page
@@ -100,7 +100,7 @@ export const Success = ({
                 id: project.id,
                 input: {
                     ...data,
-                    //type: "PROJECT" as ItemType,
+                    //type: "QUEST" as ItemType,
                     startDate,
                     dueDate,
                     //parentId,
