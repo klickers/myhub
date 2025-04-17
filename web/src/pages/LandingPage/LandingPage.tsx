@@ -1,11 +1,21 @@
+import { useEffect } from "react"
+
 import { Icon } from "@iconify/react/dist/iconify.js"
 
+import { routes } from "@redwoodjs/router"
+import { navigate } from "@redwoodjs/router"
 import { Metadata } from "@redwoodjs/web"
 
 import { useAuth } from "src/auth"
 
 const LandingPage = () => {
-    const { signUp } = useAuth()
+    const { isAuthenticated, signUp, logOut } = useAuth()
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate(routes.dashboard())
+        }
+    }, [isAuthenticated])
 
     return (
         <>

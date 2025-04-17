@@ -16,7 +16,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 className="w-16 h-screen fixed p-2 border-r border-gray-200"
             >
                 <SidebarButton
-                    to={routes.dashboard()}
+                    to={routes.calendar()}
                     icon="gravity-ui:house"
                     label="Home"
                 />
@@ -24,12 +24,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                     <SidebarButton
                         to={routes.timeTracking()}
                         icon="gravity-ui:clock"
-                        label="Time Tracking"
-                    />
-                    <SidebarButton
-                        to={routes.calendar()}
-                        icon="gravity-ui:calendar"
-                        label="Calendar"
+                        label="logbook"
                     />
                     <SidebarButton
                         to={routes.workspace()}
@@ -41,17 +36,17 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                     <SidebarButton
                         to="#!"
                         icon="gravity-ui:book"
-                        label="Journal"
+                        label="Skill Codex"
                     />
                     <SidebarButton
                         to="#!"
                         icon="gravity-ui:bulb"
-                        label="Creativity Lab"
+                        label="Campaigns"
                     />
                     <SidebarButton
                         to="#!"
                         icon="gravity-ui:heart"
-                        label="Relaxation"
+                        label="Quests"
                     />
                 </div>
                 <div className="absolute bottom-2">
