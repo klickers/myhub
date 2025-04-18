@@ -1,4 +1,5 @@
 import { Metadata } from "@redwoodjs/web"
+
 import SkillsCell from "src/components/Codex/SkillsCell"
 
 const IndexPage = () => {
