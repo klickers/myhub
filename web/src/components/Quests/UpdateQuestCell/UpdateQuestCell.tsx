@@ -2,10 +2,10 @@ import { useState } from "react"
 
 import slugify from "react-slugify"
 import type {
-    FindUpdateProjectQuery,
-    FindUpdateProjectQueryVariables,
-    UpdateProjectMutation,
-    UpdateProjectMutationVariables,
+    FindUpdateQuestQuery,
+    FindUpdateQuestQueryVariables,
+    UpdateQuestMutation,
+    UpdateQuestMutationVariables,
 } from "types/graphql"
 
 import {
@@ -26,7 +26,7 @@ import { toast } from "@redwoodjs/web/toast"
 
 import CustomDatePicker from "src/components/CustomDatePicker/CustomDatePicker"
 
-import Breadcrumb from "../Breadcrumb/Breadcrumb"
+import Breadcrumb from "../../Workspace/Breadcrumb/Breadcrumb"
 
 interface FormValues {
     name: string
@@ -35,7 +35,7 @@ interface FormValues {
 }
 
 const UPDATE_QUEST = gql`
-    mutation UpdateProjectMutation($id: String!, $input: UpdateItemInput!) {
+    mutation UpdateQuestMutation($id: String!, $input: UpdateItemInput!) {
         updateItem(id: $id, input: $input) {
             id
         }
@@ -43,11 +43,12 @@ const UPDATE_QUEST = gql`
 `
 
 export const QUERY: TypedDocumentNode<
-    FindUpdateProjectQuery,
-    FindUpdateProjectQueryVariables
+    FindUpdateQuestQuery,
+    FindUpdateQuestQueryVariables
 > = gql`
-    query FindUpdateProjectQuery($slug: String!) {
-        project(slug: $slug) {
+    query FindUpdateQuestQuery($id: String!) {
+        item(id: $id) {
+            __typename
             id
             name
             slug
@@ -64,40 +65,37 @@ export const Empty = () => <div>Empty</div>
 
 export const Failure = ({
     error,
-}: CellFailureProps<FindUpdateProjectQueryVariables>) => (
+}: CellFailureProps<FindUpdateQuestQueryVariables>) => (
     <div style={{ color: "red" }}>Error: {error?.message}</div>
 )
 
 export const Success = ({
-    project,
-}: CellSuccessProps<
-    FindUpdateProjectQuery,
-    FindUpdateProjectQueryVariables
->) => {
-    const [projectName, setProjectName] = useState(project.name)
-    const [projectSlug, setProjectSlug] = useState(project.slug)
-    const [projectDescription, setProjectDescription] = useState(
-        project.description
-    )
-    const [startDate, setStartDate] = useState(project.startDate)
-    const [dueDate, setDueDate] = useState(project.dueDate)
+    item: quest,
+}: CellSuccessProps<FindUpdateQuestQuery, FindUpdateQuestQueryVariables>) => {
+    const [questName, setQuestName] = useState(quest.name)
+    const [questSlug, setQuestSlug] = useState(quest.slug)
+    const [questDescription, setQuestDescription] = useState(quest.description)
+    const [startDate, setStartDate] = useState(quest.startDate)
+    const [dueDate, setDueDate] = useState(quest.dueDate)
 
     const [update, { loading, error }] = useMutation<
-        UpdateProjectMutation,
-        UpdateProjectMutationVariables
+        UpdateQuestMutation,
+        UpdateQuestMutationVariables
     >(UPDATE_QUEST, {
         onCompleted: () => {
-            toast.success("Project updated!")
-            // redirect to project page
+            toast.success("Quest updated!")
+            // redirect to quest page
         },
-        refetchQueries: [{ query: QUERY, variables: { slug: projectSlug } }],
+        refetchQueries: [{ query: QUERY, variables: { slug: questSlug } }],
         awaitRefetchQueries: true,
     })
+
+    // TODO: update based on change
 
     const onSubmit: SubmitHandler<FormValues> = (data) => {
         update({
             variables: {
-                id: project.id,
+                id: quest.id,
                 input: {
                     ...data,
                     //type: "QUEST" as ItemType,
@@ -112,27 +110,25 @@ export const Success = ({
     return (
         <>
             <p>
-                <Breadcrumb item={project} />
+                <Breadcrumb item={quest} />
             </p>
-            <h2>Update Project</h2>
+            <h2>Update Quest</h2>
             <Form onSubmit={onSubmit} error={error}>
                 <div>
-                    <Label name="name">Project Name</Label>
+                    <Label name="name">Quest Name</Label>
                     <TextField
                         name="name"
-                        value={projectName}
-                        onChange={(e) => setProjectName(e.target.value)}
+                        value={questName}
+                        onChange={(e) => setQuestName(e.target.value)}
                         validation={{ required: true }}
                     />
                 </div>
                 <div>
-                    <Label name="slug">Project Slug</Label>
+                    <Label name="slug">Quest Slug</Label>
                     <TextField
                         name="slug"
-                        value={projectSlug}
-                        onChange={(e) =>
-                            setProjectSlug(slugify(e.target.value))
-                        }
+                        value={questSlug}
+                        onChange={(e) => setQuestSlug(slugify(e.target.value))}
                         validation={{ required: true }}
                     />
                 </div>
@@ -156,12 +152,12 @@ export const Success = ({
                     <Label name="description" />
                     <TextAreaField
                         name="description"
-                        value={projectDescription}
-                        onChange={(e) => setProjectDescription(e.target.value)}
-                        placeholder="What's the project objective?"
+                        value={questDescription}
+                        onChange={(e) => setQuestDescription(e.target.value)}
+                        placeholder="What's the quest objective?"
                     />
                 </div>
-                <Submit disabled={loading}>Update Project</Submit>
+                <Submit disabled={loading}>Update Quest</Submit>
             </Form>
         </>
     )

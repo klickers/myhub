@@ -43,7 +43,7 @@ export const schema = gql`
         folder(slug: String!): Item @requireAuth
 
         projects(parentSlug: String!): [Item!]! @requireAuth
-        project(slug: String!): Item @requireAuth
+        project(id: String!): Item @requireAuth
 
         tasks(parentSlug: String, statusCodes: [StatusCode]): [Item!]!
             @requireAuth

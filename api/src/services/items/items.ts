@@ -90,16 +90,6 @@ export const projects: QueryResolvers["projects"] = ({ parentSlug }) => {
     })
 }
 
-export const project: QueryResolvers["project"] = ({ slug }) => {
-    return db.item.findFirst({
-        where: {
-            slug,
-            type: "QUEST" as ItemType,
-            userId: context.currentUser.id,
-        },
-    })
-}
-
 export const tasks: QueryResolvers["tasks"] = ({ parentSlug, statusCodes }) => {
     const codes = statusCodes
         ? statusCodes.map((code: StatusCode) => {

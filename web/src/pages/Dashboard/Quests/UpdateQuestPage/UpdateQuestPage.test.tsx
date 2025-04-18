@@ -1,14 +1,14 @@
 import { render } from "@redwoodjs/testing/web"
 
-import UpdateProjectPage from "./UpdateProjectPage"
+import UpdateQuestPage from "./UpdateQuestPage"
 
 //   Improve this test with help from the Redwood Testing Doc:
 //   https://redwoodjs.com/docs/testing#testing-pages-layouts
 
-describe("UpdateProjectPage", () => {
+describe("UpdateQuestPage", () => {
     it("renders successfully", () => {
         expect(() => {
-            render(<UpdateProjectPage />)
+            render(<UpdateQuestPage />)
         }).not.toThrow()
     })
 })

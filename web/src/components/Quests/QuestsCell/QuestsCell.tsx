@@ -1,5 +1,6 @@
 import type { QuestsQuery, QuestsQueryVariables } from "types/graphql"
 
+import { Link, routes } from "@redwoodjs/router"
 import type {
     CellSuccessProps,
     CellFailureProps,
@@ -21,12 +22,21 @@ export const QUERY: TypedDocumentNode<QuestsQuery, QuestsQueryVariables> = gql`
     }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = () => (
+    <div className="mb-6 rounded-3xl border border-black p-6">Loading...</div>
+)
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => (
+    <div className="mb-6 rounded-3xl border border-black p-6">Empty</div>
+)
 
 export const Failure = ({ error }: CellFailureProps<QuestsQueryVariables>) => (
-    <div style={{ color: "red" }}>Error: {error?.message}</div>
+    <div
+        className="mb-6 rounded-3xl border border-black p-6"
+        style={{ color: "red" }}
+    >
+        Error: {error?.message}
+    </div>
 )
 
 export const Success = ({
@@ -35,7 +45,10 @@ export const Success = ({
     return (
         <div className="mb-6 rounded-3xl border border-black p-6">
             {quests.map((item) => (
-                <div key={item.id}>{item.name}</div>
+                <div key={item.id}>
+                    {item.name}{" "}
+                    <Link to={routes.updateQuest({ id: item.id })}>Edit</Link>
+                </div>
             ))}
         </div>
     )

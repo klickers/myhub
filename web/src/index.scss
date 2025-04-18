@@ -54,12 +54,12 @@ form {
 input,
 textarea,
 select {
-    @apply border border-gray-300 w-full py-3 px-4 outline-none;
+    @apply border border-black w-full py-3 px-4 outline-none bg-transparent;
     &:focus {
         @apply border-black;
     }
     &::placeholder {
-        @apply text-gray-400; // !important;
+        @apply text-gray-800; // !important;
     }
 }
 

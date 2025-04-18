@@ -7,8 +7,8 @@ import type {
     FindProjectHeaderQuery,
     FindProjectHeaderQueryVariables,
     Item,
-    UpdateProjectMutation,
-    UpdateProjectMutationVariables,
+    UpdateQuestMutation,
+    UpdateQuestMutationVariables,
 } from "types/graphql"
 
 import { Link } from "@redwoodjs/router"
@@ -30,7 +30,7 @@ import "@blocknote/mantine/style.css"
 import "../../../styles/blocknote.scss"
 
 const UPDATE_QUEST = gql`
-    mutation UpdateProjectMutation($id: String!, $input: UpdateItemInput!) {
+    mutation UpdateQuestMutation($id: String!, $input: UpdateItemInput!) {
         updateItem(id: $id, input: $input) {
             id
         }
@@ -42,7 +42,7 @@ export const QUERY: TypedDocumentNode<
     FindProjectHeaderQueryVariables
 > = gql`
     query FindProjectHeaderQuery($slug: String!) {
-        project(slug: $slug) {
+        item(slug: $slug) {
             id
             name
             slug
@@ -78,7 +78,7 @@ export const Failure = ({
 )
 
 export const Success = ({
-    project,
+    item: project,
 }: CellSuccessProps<
     FindProjectHeaderQuery,
     FindProjectHeaderQueryVariables
@@ -113,8 +113,8 @@ export const Success = ({
     ).current
 
     const [update] = useMutation<
-        UpdateProjectMutation,
-        UpdateProjectMutationVariables
+        UpdateQuestMutation,
+        UpdateQuestMutationVariables
     >(UPDATE_QUEST, {
         onCompleted: () => {
             toast.success("Document updated!")
@@ -145,7 +145,7 @@ export const Success = ({
                     <Icon icon="gravity-ui:file-text" />
                 </button>
                 <Link
-                    to={routes.workspaceUpdateProject({ slug: project.slug })}
+                    to={routes.updateQuest({ id: project.id })}
                     className="button button--circle"
                 >
                     <Icon icon="gravity-ui:pencil" />

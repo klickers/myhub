@@ -81,8 +81,8 @@ export const Success = ({
                                     ) : null}
                                 </Link>
                                 <Link
-                                    to={routes.workspaceUpdateProject({
-                                        slug: item.slug,
+                                    to={routes.updateQuest({
+                                        id: item.id,
                                     })}
                                     className="project-card__edit"
                                 >
