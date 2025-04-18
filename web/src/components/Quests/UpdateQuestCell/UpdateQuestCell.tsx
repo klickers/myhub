@@ -84,7 +84,7 @@ export const Success = ({
     >(UPDATE_QUEST, {
         onCompleted: () => {
             toast.success("Quest updated!")
-            // redirect to quest page
+            // TODO: redirect to quest page
         },
         refetchQueries: [{ query: QUERY, variables: { slug: questSlug } }],
         awaitRefetchQueries: true,
