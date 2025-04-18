@@ -70,6 +70,7 @@ export const schema = gql`
         statusId: Int
         userId: String
         parents: [String]
+        childrenExplicit: [String]
     }
 
     input UpdateItemInput {
@@ -89,6 +90,7 @@ export const schema = gql`
         statusId: Int
         userId: String
         parents: [String]
+        childrenExplicit: [String]
     }
 
     type Mutation {

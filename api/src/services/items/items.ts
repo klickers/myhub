@@ -231,11 +231,19 @@ export const Item: ItemRelationResolvers = {
         return db.item.findUnique({ where: { id: root?.id } }).sessions()
     },
     parents: (_obj, { root }) => {
-        return db.item.findUnique({ where: { id: root?.id } }).parents()
+        return db.itemsOnItems
+            .findMany({
+                where: { childId: root.id },
+                include: { parent: true },
+            })
+            .then((relations) => relations.map((r) => r.parent))
     },
     childrenExplicit: (_obj, { root }) => {
-        return db.item
-            .findUnique({ where: { id: root?.id } })
-            .childrenExplicit()
+        return db.itemsOnItems
+            .findMany({
+                where: { parentId: root.id },
+                include: { child: true },
+            })
+            .then((relations) => relations.map((r) => r.child))
     },
 }

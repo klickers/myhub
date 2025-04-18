@@ -1,27 +1,25 @@
 import { useEffect, useState } from "react"
 
-import type { SkillsQuery, SkillsQueryVariables, Item } from "types/graphql"
+import type {
+    SkillsQuery,
+    SkillsQueryVariables,
+    Item,
+    ItemType,
+} from "types/graphql"
 
-import { NavLink, routes } from "@redwoodjs/router"
+import { NavLink } from "@redwoodjs/router"
 import type {
     CellSuccessProps,
     CellFailureProps,
     TypedDocumentNode,
 } from "@redwoodjs/web"
 
+import { QUERY_SKILLS } from "src/graphql/queries/getSkills.query"
+
 import CreateSkill from "../CreateSkill/CreateSkill"
 
-export const QUERY: TypedDocumentNode<SkillsQuery, SkillsQueryVariables> = gql`
-    query SkillsQuery {
-        skills {
-            id
-            name
-            parents {
-                parentId
-            }
-        }
-    }
-`
+export const QUERY: TypedDocumentNode<SkillsQuery, SkillsQueryVariables> =
+    QUERY_SKILLS
 
 export const Loading = () => (
     <div className="mb-6 rounded-3xl border border-black p-6">
@@ -50,7 +48,7 @@ export const Failure = ({ error }: CellFailureProps<SkillsQueryVariables>) => (
 export const Success = ({
     skills,
 }: CellSuccessProps<SkillsQuery, SkillsQueryVariables>) => {
-    /*const [skillsList, setSkillsList] = useState([])
+    const [skillsList, setSkillsList] = useState([])
 
     useEffect(() => {
         const newSkills = []
@@ -59,17 +57,20 @@ export const Success = ({
                 ...skill,
                 depth,
             })
-            if (skill.children != null)
-                skill.children.forEach((child) => {
-                    if (child.type == ("FOLDER" as ItemType))
-                        skillRecur(child, depth + 1)
+            if (skill?.childrenExplicit.length > 0)
+                skill.childrenExplicit.forEach((child) => {
+                    if (child.type == ("SKILL" as ItemType))
+                        skillRecur(
+                            skills.find((s) => s.id == child.id) as Item,
+                            depth + 1
+                        )
                 })
         }
         skills
-            .filter((skill: Item) => skill.parent == null)
-            .forEach((skill: Item) => skillRecur(skill, 0))
+            .filter((skill) => skill.parents.length == 0)
+            .forEach((skill) => skillRecur(skill as Item, 0))
         setSkillsList(newSkills)
-    }, [skills])*/
+    }, [skills])
 
     return (
         <>
@@ -81,8 +82,11 @@ export const Success = ({
             />
             <div className="mt-6 rounded-3xl border border-black p-6">
                 <ul className="skills space-y-1">
-                    {skills.map((item) => (
-                        <li key={item.id}>
+                    {skillsList.map((item) => (
+                        <li
+                            key={item.id}
+                            style={{ marginLeft: item.depth * 1 + "rem" }}
+                        >
                             <NavLink to="#!" activeClassName="active-link">
                                 {item.name}
                             </NavLink>
