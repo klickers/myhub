@@ -49,7 +49,8 @@ export const schema = gql`
             @requireAuth
 
         skills: [Item!]! @requireAuth
-        skill(id: String!): Item @requireAuth
+
+        quests: [Item!]! @requireAuth
     }
 
     input CreateItemInput {

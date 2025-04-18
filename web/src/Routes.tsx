@@ -20,6 +20,7 @@ const Routes = () => {
                     </Set>
                     <Route path="/dashboard/codex" page={DashboardCodexIndexPage} name="codex" />
                     <Route path="/dashboard/codex/{slug}" page={DashboardCodexSkillPage} name="skill" />
+                    <Route path="/dashboard/quests" page={DashboardQuestsIndexPage} name="quests" />
                     <Route path="/dashboard/settings" page={DashboardSettingsIndexPage} name="settings" />
                 </Set>
             </PrivateSet>

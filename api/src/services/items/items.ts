@@ -162,8 +162,16 @@ export const skills: QueryResolvers["skills"] = () => {
     })
 }
 
-export const skill: QueryResolvers["skill"] = ({ id }) => {
-    return db.item.findUnique({ where: { id } })
+export const quests: QueryResolvers["quests"] = () => {
+    return db.item.findMany({
+        where: {
+            type: "QUEST" as ItemType,
+            userId: context.currentUser.id,
+        },
+        orderBy: {
+            name: "asc",
+        },
+    })
 }
 
 export const createItem: MutationResolvers["createItem"] = ({

@@ -42,7 +42,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                         label="Campaigns"
                     />
                     <SidebarButton
-                        to="#!"
+                        to={routes.quests()}
                         icon="game-icons:flamed-leaf"
                         label="Quests"
                     />
