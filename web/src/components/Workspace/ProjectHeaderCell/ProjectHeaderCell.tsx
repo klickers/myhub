@@ -30,8 +30,12 @@ import "@blocknote/mantine/style.css"
 import "../../../styles/blocknote.scss"
 
 const UPDATE_QUEST = gql`
-    mutation UpdateQuestMutation($id: String!, $input: UpdateItemInput!) {
-        updateItem(id: $id, input: $input) {
+    mutation UpdateQuestMutation(
+        $id: String!
+        $input: UpdateItemInput!
+        $parents: [String]
+    ) {
+        updateItem(id: $id, input: $input, parents: $parents) {
             id
         }
     }

@@ -76,7 +76,7 @@ textarea {
     @apply w-full;
 
     [class*="control"] {
-        @apply rounded-full border border-gray-300 py-1 px-2 outline-none shadow-none;
+        @apply rounded-full border border-black py-1 px-2 outline-none shadow-none bg-transparent;
         &.focused {
             @apply border-black;
         }

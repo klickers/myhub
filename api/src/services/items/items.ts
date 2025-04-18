@@ -185,9 +185,25 @@ export const createItem: MutationResolvers["createItem"] = ({
     })
 }
 
-export const updateItem: MutationResolvers["updateItem"] = ({ id, input }) => {
+export const updateItem: MutationResolvers["updateItem"] = ({
+    id,
+    input,
+    parents,
+}) => {
     return db.item.update({
-        data: input,
+        data: {
+            ...input,
+            userId: context.currentUser.id,
+            ...(parents
+                ? {
+                      parents: {
+                          create: parents.map((parentId) => ({
+                              parent: { connect: { id: parentId } },
+                          })),
+                      },
+                  }
+                : null),
+        },
         where: { id },
     })
 }

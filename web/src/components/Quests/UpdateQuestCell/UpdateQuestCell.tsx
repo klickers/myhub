@@ -1,9 +1,13 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 
+import Select from "react-select"
 import slugify from "react-slugify"
 import type {
     FindUpdateQuestQuery,
     FindUpdateQuestQueryVariables,
+    Item,
+    SkillsQuery,
+    SkillsQueryVariables,
     UpdateQuestMutation,
     UpdateQuestMutationVariables,
 } from "types/graphql"
@@ -21,10 +25,12 @@ import {
     type CellFailureProps,
     type TypedDocumentNode,
     useMutation,
+    useQuery,
 } from "@redwoodjs/web"
 import { toast } from "@redwoodjs/web/toast"
 
 import CustomDatePicker from "src/components/CustomDatePicker/CustomDatePicker"
+import { QUERY_SKILLS } from "src/graphql/queries/getSkills.query"
 
 import Breadcrumb from "../../Workspace/Breadcrumb/Breadcrumb"
 
@@ -35,8 +41,12 @@ interface FormValues {
 }
 
 const UPDATE_QUEST = gql`
-    mutation UpdateQuestMutation($id: String!, $input: UpdateItemInput!) {
-        updateItem(id: $id, input: $input) {
+    mutation UpdateQuestMutation(
+        $id: String!
+        $input: UpdateItemInput!
+        $parents: [String]
+    ) {
+        updateItem(id: $id, input: $input, parents: $parents) {
             id
         }
     }
@@ -72,6 +82,10 @@ export const Failure = ({
 export const Success = ({
     item: quest,
 }: CellSuccessProps<FindUpdateQuestQuery, FindUpdateQuestQueryVariables>) => {
+    const selectRef = useRef(null)
+
+    const skillsQuery = useQuery(QUERY_SKILLS)
+
     const [questName, setQuestName] = useState(quest.name)
     const [questSlug, setQuestSlug] = useState(quest.slug)
     const [questDescription, setQuestDescription] = useState(quest.description)
@@ -93,6 +107,25 @@ export const Success = ({
     // TODO: update based on change
 
     const onSubmit: SubmitHandler<FormValues> = (data) => {
+        console.log({
+            variables: {
+                id: quest.id,
+                input: {
+                    ...data,
+                    //type: "QUEST" as ItemType,
+                    startDate,
+                    dueDate,
+                    //parentId,
+                },
+                ...(selectRef.current.state.selectValue.length > 0
+                    ? {
+                          parents: selectRef.current.state.selectValue.map(
+                              (parent) => parent.value
+                          ),
+                      }
+                    : null),
+            },
+        })
         update({
             variables: {
                 id: quest.id,
@@ -103,6 +136,13 @@ export const Success = ({
                     dueDate,
                     //parentId,
                 },
+                ...(selectRef.current.state.selectValue.length > 0
+                    ? {
+                          parents: selectRef.current.state.selectValue.map(
+                              (parent) => parent.value
+                          ),
+                      }
+                    : null),
             },
         })
     }
@@ -155,6 +195,24 @@ export const Success = ({
                         value={questDescription}
                         onChange={(e) => setQuestDescription(e.target.value)}
                         placeholder="What's the quest objective?"
+                    />
+                </div>
+                <div>
+                    <Label name="parentId">Skills</Label>
+                    <Select
+                        ref={selectRef}
+                        name="parentId"
+                        className="select"
+                        placeholder="Select Skills"
+                        options={skillsQuery.data?.skills.map((item: Item) => ({
+                            value: item.id,
+                            label: item.name,
+                        }))}
+                        classNames={{
+                            control: (state) =>
+                                state.isFocused ? "focused" : "",
+                            menuList: () => "menu-list",
+                        }}
                     />
                 </div>
                 <Submit disabled={loading}>Update Quest</Submit>
