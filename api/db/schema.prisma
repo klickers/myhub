@@ -20,7 +20,8 @@ model User {
     sessions            Session[]
     keyValues           KeyValue[]
     googleCalendarLinks GoogleCalendarLink[]
-    Setting             Setting[]
+    settings            Setting[]
+    quotes              Quote[]
 }
 
 model KeyValue {
@@ -54,9 +55,11 @@ model Item {
     minBlockTime       Int?
     maxBlockTime       Int?
     maxBlockTimePerDay Int?
-    parentId           String?
-    statusId           Int?
-    userId             String
+    timeConstrained    Boolean   @default(true)
+
+    parentId String?
+    statusId Int?
+    userId   String
 
     parent   Item?       @relation("ParentChild", fields: [parentId], references: [id])
     children Item[]      @relation("ParentChild")
@@ -166,4 +169,15 @@ model Setting {
     user User @relation(fields: [userId], references: [clerkId])
 
     @@unique([userId, name])
+}
+
+model Quote {
+    id     String  @id @default(uuid())
+    quote  String
+    author String?
+    userId String
+
+    user User @relation(fields: [userId], references: [clerkId])
+
+    @@unique([userId, quote, author])
 }
